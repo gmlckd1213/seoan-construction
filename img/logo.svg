@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 100" fill="none" stroke="#888" stroke-width="1.2">
+  <!-- Grid lines -->
+  <line x1="0" y1="8" x2="360" y2="8" stroke-width="0.4" opacity="0.3"/>
+  <line x1="0" y1="68" x2="360" y2="68" stroke-width="0.4" opacity="0.3"/>
+  <line x1="10" y1="0" x2="10" y2="100" stroke-width="0.4" opacity="0.3"/>
+  <line x1="70" y1="0" x2="70" y2="100" stroke-width="0.4" opacity="0.3"/>
+  <line x1="80" y1="0" x2="80" y2="100" stroke-width="0.4" opacity="0.3"/>
+  <line x1="140" y1="0" x2="140" y2="100" stroke-width="0.4" opacity="0.3"/>
+  <line x1="150" y1="0" x2="150" y2="100" stroke-width="0.4" opacity="0.3"/>
+  <line x1="220" y1="0" x2="220" y2="100" stroke-width="0.4" opacity="0.3"/>
+  <line x1="230" y1="0" x2="230" y2="100" stroke-width="0.4" opacity="0.3"/>
+  <line x1="290" y1="0" x2="290" y2="100" stroke-width="0.4" opacity="0.3"/>
+  <line x1="300" y1="0" x2="300" y2="100" stroke-width="0.4" opacity="0.3"/>
+  <line x1="350" y1="0" x2="350" y2="100" stroke-width="0.4" opacity="0.3"/>
+
+  <!-- S -->
+  <path d="M60,15 A25,20 0 0,0 15,30 A20,18 0 0,0 60,48 A25,20 0 0,1 15,63" fill="none" stroke-width="1.5"/>
+
+  <!-- E -->
+  <line x1="85" y1="12" x2="85" y2="66" stroke-width="1.5"/>
+  <line x1="85" y1="12" x2="135" y2="12" stroke-width="1.5"/>
+  <line x1="85" y1="38" x2="125" y2="38" stroke-width="1.5"/>
+  <line x1="85" y1="66" x2="135" y2="66" stroke-width="1.5"/>
+
+  <!-- O -->
+  <ellipse cx="185" cy="39" rx="32" ry="28" stroke-width="1.5"/>
+  <ellipse cx="185" cy="39" rx="18" ry="16" stroke-width="0.8" opacity="0.4"/>
+
+  <!-- A -->
+  <path d="M235,66 L260,12 L285,66" fill="none" stroke-width="1.5"/>
+  <line x1="243" y1="48" x2="277" y2="48" stroke-width="1.2"/>
+
+  <!-- N -->
+  <line x1="305" y1="66" x2="305" y2="12" stroke-width="1.5"/>
+  <line x1="305" y1="12" x2="345" y2="66" stroke-width="1.5"/>
+  <line x1="345" y1="66" x2="345" y2="12" stroke-width="1.5"/>
+
+  <!-- CONSTRUCTION text -->
+  <text x="180" y="90" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="300" letter-spacing="6" fill="#888" stroke="none">CONSTRUCTION</text>
+</svg>

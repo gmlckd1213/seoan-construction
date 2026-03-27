@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEOAN CONSTRUCTION — 디자인 시안</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500&family=Noto+Serif+KR:wght@200;300;400&family=Cormorant+Garamond:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: #f6f3ed;
+            color: #3d3630;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 24px;
+            -webkit-font-smoothing: antialiased;
+        }
+        .logo { margin-bottom: 48px; }
+        .logo img { height: 50px; width: auto; }
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6rem;
+            font-weight: 300;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .subtitle {
+            font-size: 0.8rem;
+            color: #9a8e80;
+            font-weight: 300;
+            margin-bottom: 56px;
+            text-align: center;
+        }
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            max-width: 1000px;
+            width: 100%;
+        }
+        .card {
+            background: #faf8f4;
+            border: 1px solid #e0d8cc;
+            border-radius: 8px;
+            padding: 36px 24px;
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            transition: 0.4s ease;
+        }
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.06);
+            border-color: #b8926a;
+        }
+        .card-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.4rem;
+            font-weight: 300;
+            color: #e0d8cc;
+            margin-bottom: 16px;
+        }
+        .card:hover .card-num { color: #b8926a; }
+        .card-title {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1rem;
+            font-weight: 400;
+            margin-bottom: 8px;
+        }
+        .card-desc {
+            font-size: 0.75rem;
+            color: #9a8e80;
+            font-weight: 300;
+            line-height: 1.7;
+        }
+        .card-tag {
+            display: inline-block;
+            margin-top: 16px;
+            font-size: 0.6rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            color: #b8926a;
+            border: 1px solid #e0d8cc;
+            padding: 4px 12px;
+            border-radius: 2px;
+        }
+        .card:hover .card-tag { border-color: #b8926a; }
+        footer {
+            margin-top: 80px;
+            font-size: 0.7rem;
+            color: #beb3a4;
+            font-weight: 300;
+        }
+        @media (max-width: 768px) {
+            .cards { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 480px) {
+            .cards { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="logo"><img src="img/logo.svg" alt="SEOAN"></div>
+    <h1>Design Portfolio</h1>
+    <p class="subtitle">(주)서안종합건설 — 디자인 시안 선택</p>
+
+    <div class="cards">
+        <a href="projects0.html" class="card">
+            <p class="card-num">00</p>
+            <h2 class="card-title">원본</h2>
+            <p class="card-desc">기존 서안종합건설<br>원페이지 사이트</p>
+            <span class="card-tag">ORIGINAL</span>
+        </a>
+        <a href="projects1.html" class="card">
+            <p class="card-num">01</p>
+            <h2 class="card-title">미니멀 에디토리얼</h2>
+            <p class="card-desc">아이보리 톤<br>비대칭 그리드 레이아웃</p>
+            <span class="card-tag">MINIMAL</span>
+        </a>
+        <a href="projects2.html" class="card">
+            <p class="card-num">02</p>
+            <h2 class="card-title">모던 리스트</h2>
+            <p class="card-desc">아이보리 톤<br>리스트형 프로젝트 구성</p>
+            <span class="card-tag">MODERN</span>
+        </a>
+        <a href="projects3.html" class="card">
+            <p class="card-num">03</p>
+            <h2 class="card-title">내추럴 감성</h2>
+            <p class="card-desc">아이보리 톤<br>세리프체 따뜻한 분위기</p>
+            <span class="card-tag">NATURAL</span>
+        </a>
+    </div>
+
+    <footer>&copy; 2026 SEOAN Design Studio</footer>
+</body>
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시안 1 — Minimal Ivory Editorial</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700&family=Noto+Serif+KR:wght@200;300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+        :root {
+            --dark: #3d3630;
+            --gray: #9a8e80;
+            --gray-light: #beb3a4;
+            --border: #e0d8cc;
+            --cream: #f6f3ed;
+            --ivory: #faf8f4;
+            --white: #fff;
+            --accent: #b8926a;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            color: var(--dark);
+            background: var(--cream);
+            line-height: 1.8;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container { max-width: 1300px; margin: 0 auto; padding: 0 48px; }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed; top:0; left:0; width:100%; z-index:100;
+            padding: 20px 48px;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(246,243,237,0.92);
+            backdrop-filter: blur(16px);
+        }
+        nav .logo img { height: 36px; width: auto; }
+        nav .nav-links { display:flex; gap:36px; }
+        nav .nav-links a {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 0.78rem; font-weight: 300;
+            color: var(--gray); text-decoration: none;
+            transition: 0.3s;
+        }
+        nav .nav-links a:hover { color: var(--dark); }
+
+        /* ── HERO ── */
+        .hero {
+            height: 100vh; display: flex; align-items: flex-end;
+            padding: 0 48px 100px;
+            background: var(--ivory);
+            position: relative; overflow: hidden;
+        }
+        .hero::before {
+            content: '01';
+            position: absolute; top: 50%; right: 80px;
+            transform: translateY(-50%);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28vw; font-weight: 300;
+            color: rgba(0,0,0,0.02);
+            line-height: 1;
+        }
+        .hero-label {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 0.7rem; font-weight: 300;
+            letter-spacing: 4px;
+            color: var(--accent); margin-bottom: 24px;
+        }
+        .hero h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(3rem, 7vw, 6.5rem);
+            font-weight: 300; line-height: 1.1;
+            letter-spacing: -2px; color: var(--dark);
+        }
+        .hero h1 em {
+            font-style: italic; font-weight: 400;
+            color: var(--accent);
+        }
+        .hero-sub {
+            margin-top: 32px;
+            font-family: 'Noto Serif KR', serif;
+            font-size: 0.95rem; color: var(--gray);
+            font-weight: 300; max-width: 420px; line-height: 2;
+        }
+
+        /* ── PROJECTS ── */
+        .projects { padding: 140px 0; }
+        .section-label {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 0.65rem; font-weight: 300;
+            letter-spacing: 4px;
+            color: var(--gray); margin-bottom: 14px;
+        }
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            font-weight: 300; letter-spacing: -1px;
+            margin-bottom: 72px;
+        }
+
+        .grid-asymmetric {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 28px;
+            margin-bottom: 28px;
+        }
+        .grid-asymmetric.reverse { grid-template-columns: 1fr 1.3fr; }
+
+        .card {
+            position: relative; overflow: hidden;
+            border-radius: 6px; cursor: pointer;
+        }
+        .card-img {
+            width: 100%; aspect-ratio: 4/3;
+            transition: transform 0.7s ease;
+        }
+        .card-img.tall { aspect-ratio: 3/4; }
+        .card:hover .card-img { transform: scale(1.03); }
+
+        .v1 { background: linear-gradient(145deg, #e8e2d8 0%, #ddd6ca 100%); position:relative; }
+        .v1::after { content:''; position:absolute; inset:10%; border:1px solid rgba(0,0,0,0.04); border-radius:4px; }
+        .v2 { background: linear-gradient(145deg, #d8d2c6 0%, #cec6b8 100%); position:relative; }
+        .v2::after { content:''; position:absolute; top:15%; left:50%; transform:translateX(-50%); width:40%; height:65%; background:rgba(255,255,255,0.15); border-radius:4px; }
+        .v3 { background: linear-gradient(145deg, #cec8bc 0%, #c2baa8 100%); position:relative; }
+        .v3::before { content:''; position:absolute; inset:0; background: repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(0,0,0,0.02) 50px, rgba(0,0,0,0.02) 51px); }
+        .v4 { background: linear-gradient(145deg, #c4bcae 0%, #b8b0a0 100%); position:relative; }
+        .v4::after { content:''; position:absolute; bottom:0; left:15%; width:70%; height:60%; border-top:1px solid rgba(0,0,0,0.04); background:rgba(255,255,255,0.08); }
+
+        .card-info { padding: 20px 0 0; }
+        .card-cat {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 0.6rem; font-weight: 300;
+            letter-spacing: 2px;
+            color: var(--accent); margin-bottom: 6px;
+        }
+        .card-name {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1.15rem; font-weight: 400;
+        }
+        .card-loc { font-size: 0.78rem; color: var(--gray); font-weight: 300; margin-top: 2px; }
+
+        /* ── ABOUT ── */
+        .about-strip {
+            padding: 120px 0;
+            background: var(--dark); color: var(--ivory);
+        }
+        .about-strip .inner {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+        }
+        .about-strip h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            font-weight: 300; letter-spacing: -1px; line-height: 1.4;
+        }
+        .about-strip h2 em { color: var(--accent); font-style: italic; font-weight: 400; }
+        .about-strip p {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 0.95rem; color: rgba(250,248,244,0.45);
+            font-weight: 300; line-height: 2.1;
+        }
+
+        /* ── CONTACT ── */
+        .contact-bar {
+            padding: 80px 0;
+            border-top: 1px solid var(--border);
+        }
+        .contact-bar .inner {
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 32px;
+        }
+        .contact-bar h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem; font-weight: 400;
+        }
+        .contact-bar .info { display: flex; gap: 48px; }
+        .contact-bar .info-item label {
+            display: block;
+            font-size: 0.6rem; font-weight: 300;
+            letter-spacing: 2px;
+            color: var(--gray); margin-bottom: 4px;
+        }
+        .contact-bar .info-item p {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 0.88rem; color: var(--dark); font-weight: 300;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            padding: 32px 0;
+            text-align: center;
+            font-size: 0.75rem; color: var(--gray-light);
+            font-weight: 300;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 0 24px; }
+            nav { padding: 16px 24px; }
+            .hero { padding: 0 24px 60px; }
+            .grid-asymmetric, .grid-asymmetric.reverse { grid-template-columns: 1fr; }
+            .about-strip .inner { grid-template-columns: 1fr; gap: 40px; }
+            .contact-bar .inner { flex-direction: column; align-items: flex-start; }
+            .contact-bar .info { flex-direction: column; gap: 20px; }
+            nav .nav-links { display: none; }
+        }
+
+        .fade-in {
+            opacity: 0; transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="projects1" class="logo"><img src="img/logo.svg" alt="SEOAN"></a>
+    <div class="nav-links">
+        <a href="projects0">원본</a>
+        <a href="projects1">시안 1</a>
+        <a href="projects2">시안 2</a>
+        <a href="projects3">시안 3</a>
+    </div>
+</nav>
+
+<section class="hero">
+    <div>
+        <p class="hero-label">Design &amp; Architecture Portfolio</p>
+        <h1>Shaping<br><em>timeless</em><br>spaces</h1>
+        <p class="hero-sub">공간의 본질을 탐구하고, 빛과 구조의 조화를 통해 시간이 지나도 변하지 않는 건축을 만듭니다.</p>
+    </div>
+</section>
+
+<section class="projects">
+    <div class="container">
+        <p class="section-label fade-in">Selected Work</p>
+        <h2 class="section-title fade-in">Projects</h2>
+
+        <div class="grid-asymmetric">
+            <div class="card fade-in">
+                <div class="card-img v1"></div>
+                <div class="card-info">
+                    <p class="card-cat">Residential</p>
+                    <h3 class="card-name">남양주 힐사이드 레지던스</h3>
+                    <p class="card-loc">Namyangju — 2025</p>
+                </div>
+            </div>
+            <div class="card fade-in">
+                <div class="card-img tall v2"></div>
+                <div class="card-info">
+                    <p class="card-cat">Commercial</p>
+                    <h3 class="card-name">덕소 아트 갤러리</h3>
+                    <p class="card-loc">Deokso — 2024</p>
+                </div>
+            </div>
+        </div>
+        <div class="grid-asymmetric reverse">
+            <div class="card fade-in">
+                <div class="card-img tall v3"></div>
+                <div class="card-info">
+                    <p class="card-cat">Interior</p>
+                    <h3 class="card-name">와부 라운지 카페</h3>
+                    <p class="card-loc">Wabu — 2025</p>
+                </div>
+            </div>
+            <div class="card fade-in">
+                <div class="card-img v4"></div>
+                <div class="card-info">
+                    <p class="card-cat">Renovation</p>
+                    <h3 class="card-name">진접 복합문화공간</h3>
+                    <p class="card-loc">Jinjeop — 2024</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="about-strip">
+    <div class="container">
+        <div class="inner">
+            <h2 class="fade-in">We design<br>spaces that<br><em>breathe</em></h2>
+            <p class="fade-in">서안 디자인 스튜디오는 건축, 인테리어, 리노베이션을 아우르는 종합 디자인 스튜디오입니다. 재료 본연의 물성과 빛의 흐름, 구조의 정직함이 만들어내는 절제된 아름다움을 추구합니다.</p>
+        </div>
+    </div>
+</section>
+
+<section class="contact-bar">
+    <div class="container">
+        <div class="inner">
+            <h3 class="fade-in">Let's work together</h3>
+            <div class="info fade-in">
+                <div class="info-item"><label>Phone</label><p>010-9009-2821</p></div>
+                <div class="info-item"><label>Email</label><p>seoancc@naver.com</p></div>
+                <div class="info-item"><label>Address</label><p>경기도 남양주시 와부읍 덕소로 250</p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer><p>&copy; 2026 SEOAN Design Studio</p></footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(function(el) { observer.observe(el); });
+});
+</script>
+</body>
+</html>

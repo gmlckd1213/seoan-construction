@@ -36,13 +36,15 @@
         /* ── NAV ── */
         nav {
             position: fixed; top:0; left:0; width:100%; z-index:100;
-            padding: 20px 48px;
+            padding: 0 48px;
+            height: 56px;
             display: flex; justify-content: space-between; align-items: center;
             background: rgba(246,243,237,0.92);
             backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border);
+            overflow: visible;
         }
-        nav .logo img { height: 34px; width: auto; }
+        nav .logo img { height: 68px; width: auto; position: relative; top: 8px; }
         nav .nav-links { display: flex; gap: 32px; }
         nav .nav-links a {
             font-size: 0.75rem; font-weight: 300;
@@ -281,7 +283,7 @@
 
         @media (max-width: 768px) {
             .container { padding: 0 20px; }
-            nav { padding: 16px 20px; }
+            nav { padding: 0 20px; height: 48px; }
             .project-row { grid-template-columns: 40px 1fr; gap: 16px; }
             .p-cat, .p-year { display: none; }
             .stats { grid-template-columns: repeat(2, 1fr); }

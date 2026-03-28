@@ -34,12 +34,14 @@
         /* ── NAV ── */
         nav {
             position: fixed; top:0; left:0; width:100%; z-index:100;
-            padding: 20px 48px;
+            padding: 0 48px;
+            height: 56px;
             display: flex; justify-content: space-between; align-items: center;
             background: rgba(246,243,237,0.92);
             backdrop-filter: blur(16px);
+            overflow: visible;
         }
-        nav .logo img { height: 36px; width: auto; }
+        nav .logo img { height: 72px; width: auto; position: relative; top: 8px; }
         nav .nav-links { display:flex; gap:36px; }
         nav .nav-links a {
             font-family: 'Noto Sans KR', sans-serif;
@@ -199,7 +201,7 @@
 
         @media (max-width: 768px) {
             .container { padding: 0 24px; }
-            nav { padding: 16px 24px; }
+            nav { padding: 0 24px; height: 48px; }
             .hero { padding: 0 24px 60px; }
             .grid-asymmetric, .grid-asymmetric.reverse { grid-template-columns: 1fr; }
             .about-strip .inner { grid-template-columns: 1fr; gap: 40px; }

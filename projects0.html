@@ -5,10 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>(주)서안종합건설 | SEOAN CONSTRUCTION</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700&family=Noto+Serif+KR:wght@200;300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
 /* ============================================
    (주)서안종합건설 - SEOAN CONSTRUCTION
    ============================================ */
+
+/* --- Intro Overlay --- */
+#intro {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: #2c2722;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+#intro.off {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+#intro .intro-text {
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+#intro .intro-text.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#intro .intro-desc {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 23px;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 4px;
+    position: absolute;
+    top: calc(50% - 200px);
+}
+
+#intro .intro-logo-img {
+    opacity: 0;
+    transition: opacity 1.8s ease;
+    width: 55vw;
+    max-width: 600px;
+    height: auto;
+    position: absolute;
+    filter: invert(1) brightness(1.2) contrast(1.5);
+}
+
+#intro .intro-logo-img.show {
+    opacity: 1;
+}
+
+#intro .intro-logo-img.fly {
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: invert(1) brightness(0.7);
+}
+
+@media (max-width: 768px) {
+    #intro .intro-logo-img { width: 85vw; }
+    #intro .intro-desc { font-size: 0.85rem; }
+}
+
 
 /* --- Reset & Base --- */
 *, *::before, *::after {
@@ -112,8 +181,8 @@ a {
     box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
 }
 
-.navbar.scrolled .logo-main { color: var(--primary); }
-.navbar.scrolled .logo-sub { color: var(--accent); }
+.navbar .logo img { transition: var(--transition); }
+.navbar.scrolled .logo img { filter: invert(1) brightness(0.4); }
 .navbar.scrolled .nav-links a { color: var(--text-light); }
 .navbar.scrolled .nav-links a:hover { color: var(--primary); }
 .navbar.scrolled .hamburger span { background: var(--primary); }
@@ -129,26 +198,13 @@ a {
 
 .logo {
     display: flex;
-    flex-direction: column;
-    line-height: 1;
+    align-items: center;
     transition: var(--transition);
 }
 
-.logo-main {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.5rem;
-    font-weight: 500;
-    color: var(--white);
-    letter-spacing: 6px;
-}
-
-.logo-sub {
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 0.5rem;
-    font-weight: 300;
-    color: var(--accent);
-    letter-spacing: 5.5px;
-    margin-top: 2px;
+.logo img {
+    height: 60px;
+    width: auto;
 }
 
 .nav-links {
@@ -402,7 +458,7 @@ a {
    ABOUT
    ============================================ */
 .about {
-    background: var(--bg);
+    background: var(--white);
 }
 
 .about-grid {
@@ -498,7 +554,7 @@ a {
    SERVICES
    ============================================ */
 .services {
-    background: var(--white);
+    background: var(--bg);
 }
 
 .services-grid {
@@ -565,7 +621,14 @@ a {
    PORTFOLIO
    ============================================ */
 .portfolio {
-    background: var(--bg-dark);
+    background: var(--bg-warm);
+    overflow: hidden;
+    padding-bottom: 80px;
+    perspective: 1200px;
+}
+
+.portfolio .section-header {
+    margin-bottom: 20px;
 }
 
 .portfolio .section-label {
@@ -573,24 +636,24 @@ a {
 }
 
 .portfolio .section-title {
-    color: var(--white);
+    color: var(--primary);
 }
 
 .portfolio-filter {
     display: flex;
     justify-content: center;
-    gap: 12px;
-    margin-bottom: 50px;
+    gap: 10px;
+    margin-bottom: 30px;
     flex-wrap: wrap;
 }
 
 .filter-btn {
-    padding: 10px 24px;
-    border: 1px solid rgba(250, 248, 244, 0.15);
+    padding: 10px 28px;
+    border: 1px solid var(--border);
     background: transparent;
-    color: rgba(250, 248, 244, 0.45);
+    color: var(--text-light);
     border-radius: 4px;
-    font-size: 0.8rem;
+    font-size: 0.95rem;
     font-weight: 300;
     cursor: pointer;
     transition: var(--transition);
@@ -604,29 +667,53 @@ a {
     color: var(--white);
 }
 
-.portfolio-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+/* 슬라이더 */
+.portfolio-slider-wrap {
+    position: relative;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    overflow: visible;
+    cursor: grab;
+}
+
+.portfolio-slider-wrap:active {
+    cursor: grabbing;
+}
+
+.portfolio-slider {
+    display: flex;
+    align-items: center;
     gap: 16px;
-    grid-auto-rows: 260px;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    padding: 30px 0;
+    user-select: none;
 }
 
 .portfolio-item {
     position: relative;
-    border-radius: 8px;
+    border-radius: 12px;
     overflow: hidden;
     cursor: pointer;
-    transition: var(--transition);
+    flex-shrink: 0;
+    width: 300px;
+    height: 400px;
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.08);
+    transform-style: preserve-3d;
 }
 
-.portfolio-item.large {
-    grid-column: span 2;
+.portfolio-item.active {
+    width: 500px;
+    height: 480px;
+    box-shadow: 0 25px 80px rgba(0,0,0,0.12);
+    border: 1px solid rgba(255,255,255,0.15);
 }
 
 .portfolio-thumb {
     width: 100%;
     height: 100%;
-    transition: var(--transition);
 }
 
 .portfolio-thumb-inner {
@@ -642,26 +729,27 @@ a {
     height: 80px;
 }
 
+.portfolio-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
 .portfolio-overlay {
     position: absolute;
-    inset: 0;
-    background: rgba(26, 35, 50, 0.92);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.75));
+    padding: 40px 24px 24px;
     opacity: 0;
     transition: var(--transition);
-    padding: 20px;
     text-align: center;
 }
 
-.portfolio-item:hover .portfolio-overlay {
+.portfolio-item.active .portfolio-overlay {
     opacity: 1;
-}
-
-.portfolio-item:hover .portfolio-thumb {
-    transform: scale(1.05);
 }
 
 .portfolio-category {
@@ -670,31 +758,63 @@ a {
     text-transform: uppercase;
     letter-spacing: 2px;
     color: var(--accent);
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
 .portfolio-overlay h3 {
     font-family: 'Noto Serif KR', serif;
-    color: var(--white);
+    color: #fff;
     font-size: 1.15rem;
     font-weight: 400;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
 }
 
 .portfolio-overlay p {
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 0.85rem;
+    color: rgba(255,255,255,0.6);
+    font-size: 0.8rem;
 }
 
-.portfolio-item.hidden {
-    display: none;
+/* 화살표 버튼 */
+.slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,0,0,0.1);
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(10px);
+    color: var(--primary);
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.slider-btn:hover {
+    background: var(--primary);
+    color: var(--white);
+}
+
+.slider-btn.prev { left: 30px; }
+.slider-btn.next { right: 30px; }
+
+@media (max-width: 768px) {
+    .portfolio-item { width: 200px; height: 280px; }
+    .portfolio-item.active { width: 300px; height: 360px; }
+    .slider-btn.prev { left: 10px; }
+    .slider-btn.next { right: 10px; }
 }
 
 /* ============================================
    CEO
    ============================================ */
 .ceo {
-    background: var(--bg-warm);
+    background: var(--border);
 }
 
 .ceo-content {
@@ -797,7 +917,8 @@ a {
    CONTACT
    ============================================ */
 .contact {
-    background: var(--white);
+    background: var(--bg-dark);
+    color: var(--white);
 }
 
 .contact-grid {
@@ -919,8 +1040,12 @@ a {
 
 .footer-logo {
     display: flex;
-    flex-direction: column;
-    line-height: 1;
+    align-items: center;
+}
+
+.footer-logo img {
+    height: 50px;
+    width: auto;
 }
 
 .footer-company-name {
@@ -978,10 +1103,6 @@ a {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .portfolio-grid {
-        grid-template-columns: repeat(2, 1fr);
-        grid-auto-rows: 220px;
-    }
 
     .ceo-content {
         grid-template-columns: 1fr;
@@ -1051,10 +1172,6 @@ a {
         grid-template-columns: 1fr;
     }
 
-    .portfolio-grid {
-        grid-template-columns: 1fr;
-        grid-auto-rows: 200px;
-    }
 
     .portfolio-item.large {
         grid-column: span 1;
@@ -1097,12 +1214,17 @@ a {
 </head>
 <body>
 
+<!-- Intro Overlay -->
+<div id="intro">
+    <div class="intro-text intro-desc">공간의 가치를 높이는</div>
+    <img class="intro-logo-img" src="img/logo.png" alt="SEOAN CONSTRUCTION">
+</div>
+
 <!-- Navigation -->
 <nav class="navbar" id="navbar">
     <div class="nav-container">
         <a href="#hero" class="logo">
-            <span class="logo-main">SEOAN</span>
-            <span class="logo-sub">CONSTRUCTION</span>
+            <img src="img/logo.png" alt="서안종합건설">
         </a>
         <div class="nav-links" id="navLinks">
             <a href="#about">회사소개</a>
@@ -1131,16 +1253,98 @@ a {
             토목 · 건축 · 인테리어 · 리모델링<br>
             정직한 시공, 완벽한 마감으로 고객의 꿈을 실현합니다.
         </p>
-        <div class="hero-buttons" data-aos="fade-up" data-aos-delay="600">
-            <a href="#portfolio" class="btn-primary">시공실적 보기</a>
-            <a href="#contact" class="btn-outline">상담 문의</a>
-        </div>
     </div>
     <div class="scroll-indicator">
         <div class="mouse">
             <div class="wheel"></div>
         </div>
         <p>Scroll Down</p>
+    </div>
+</section>
+
+<!-- Portfolio Section -->
+<section class="section portfolio" id="portfolio">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <span class="section-label">Portfolio</span>
+            <h2 class="section-title">시공실적</h2>
+        </div>
+        <div class="portfolio-filter" data-aos="fade-up">
+            <button class="filter-btn active" data-filter="all">전체</button>
+            <button class="filter-btn" data-filter="interior">인테리어</button>
+            <button class="filter-btn" data-filter="civil">토목</button>
+            <button class="filter-btn" data-filter="building">건물</button>
+        </div>
+        <div class="portfolio-slider-wrap" data-aos="fade-up">
+            <button class="slider-btn prev">&#8249;</button>
+            <button class="slider-btn next">&#8250;</button>
+            <div class="portfolio-slider">
+            <div class="portfolio-item" data-category="building">
+                <img class="portfolio-img" src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800" alt="다세대주택">
+                <div class="portfolio-overlay">
+                    <span class="portfolio-category">건축공사</span>
+                    <h3>남양주 다세대주택 신축</h3>
+                    <p>지상 5층 · 연면적 1,200평</p>
+                </div>
+            </div>
+            <div class="portfolio-item" data-category="civil">
+                <img class="portfolio-img" src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800" alt="도로공사">
+                <div class="portfolio-overlay">
+                    <span class="portfolio-category">토목공사</span>
+                    <h3>덕소 도로 확포장 공사</h3>
+                    <p>연장 2.5km</p>
+                </div>
+            </div>
+            <div class="portfolio-item" data-category="interior">
+                <img class="portfolio-img" src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800" alt="카페인테리어">
+                <div class="portfolio-overlay">
+                    <span class="portfolio-category">인테리어</span>
+                    <h3>와부읍 카페 인테리어</h3>
+                    <p>120평 상업공간</p>
+                </div>
+            </div>
+            <div class="portfolio-item" data-category="remodel">
+                <img class="portfolio-img" src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800" alt="리모델링">
+                <div class="portfolio-overlay">
+                    <span class="portfolio-category">리모델링</span>
+                    <h3>상가건물 외관 리모델링</h3>
+                    <p>외장 · 방수 · 단열 보강</p>
+                </div>
+            </div>
+            <div class="portfolio-item" data-category="building">
+                <img class="portfolio-img" src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800" alt="상업건물">
+                <div class="portfolio-overlay">
+                    <span class="portfolio-category">건축공사</span>
+                    <h3>근린생활시설 신축</h3>
+                    <p>지하 1층 · 지상 4층</p>
+                </div>
+            </div>
+            <div class="portfolio-item" data-category="interior">
+                <img class="portfolio-img" src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800" alt="오피스인테리어">
+                <div class="portfolio-overlay">
+                    <span class="portfolio-category">인테리어</span>
+                    <h3>오피스 인테리어 시공</h3>
+                    <p>200평 사무공간 전면 시공</p>
+                </div>
+            </div>
+            <div class="portfolio-item" data-category="civil">
+                <img class="portfolio-img" src="https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=800" alt="택지조성">
+                <div class="portfolio-overlay">
+                    <span class="portfolio-category">토목공사</span>
+                    <h3>택지조성 공사</h3>
+                    <p>부지 정지 · 옹벽 · 우수관</p>
+                </div>
+            </div>
+            <div class="portfolio-item" data-category="remodel">
+                <img class="portfolio-img" src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800" alt="주택리모델링">
+                <div class="portfolio-overlay">
+                    <span class="portfolio-category">리모델링</span>
+                    <h3>단독주택 전체 리모델링</h3>
+                    <p>구조보강 · 내외장 전면 교체</p>
+                </div>
+            </div>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -1293,173 +1497,6 @@ a {
     </div>
 </section>
 
-<!-- Portfolio Section -->
-<section class="section portfolio" id="portfolio">
-    <div class="container">
-        <div class="section-header" data-aos="fade-up">
-            <span class="section-label">Portfolio</span>
-            <h2 class="section-title">시공실적</h2>
-        </div>
-        <div class="portfolio-filter" data-aos="fade-up">
-            <button class="filter-btn active" data-filter="all">전체</button>
-            <button class="filter-btn" data-filter="building">건축</button>
-            <button class="filter-btn" data-filter="civil">토목</button>
-            <button class="filter-btn" data-filter="interior">인테리어</button>
-            <button class="filter-btn" data-filter="remodel">리모델링</button>
-        </div>
-        <div class="portfolio-grid">
-            <div class="portfolio-item large" data-category="building" data-aos="fade-up">
-                <div class="portfolio-thumb" style="background: linear-gradient(135deg, #2c3e50 0%, #4a6741 100%);">
-                    <div class="portfolio-thumb-inner">
-                        <svg class="portfolio-svg" viewBox="0 0 120 80" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1">
-                            <rect x="30" y="10" width="60" height="65" rx="2"/>
-                            <rect x="38" y="18" width="10" height="8" rx="1"/><rect x="55" y="18" width="10" height="8" rx="1"/><rect x="72" y="18" width="10" height="8" rx="1"/>
-                            <rect x="38" y="32" width="10" height="8" rx="1"/><rect x="55" y="32" width="10" height="8" rx="1"/><rect x="72" y="32" width="10" height="8" rx="1"/>
-                            <rect x="38" y="46" width="10" height="8" rx="1"/><rect x="55" y="46" width="10" height="8" rx="1"/><rect x="72" y="46" width="10" height="8" rx="1"/>
-                            <rect x="52" y="60" width="16" height="15"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="portfolio-overlay">
-                    <span class="portfolio-category">건축공사</span>
-                    <h3>남양주 다세대주택 신축</h3>
-                    <p>지상 5층 · 연면적 1,200평</p>
-                </div>
-            </div>
-            <div class="portfolio-item" data-category="civil" data-aos="fade-up">
-                <div class="portfolio-thumb" style="background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);">
-                    <div class="portfolio-thumb-inner">
-                        <svg class="portfolio-svg" viewBox="0 0 120 80" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1">
-                            <path d="M10 65 Q60 20 110 65"/>
-                            <line x1="10" y1="65" x2="110" y2="65"/>
-                            <line x1="35" y1="65" x2="35" y2="42"/>
-                            <line x1="60" y1="65" x2="60" y2="25"/>
-                            <line x1="85" y1="65" x2="85" y2="42"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="portfolio-overlay">
-                    <span class="portfolio-category">토목공사</span>
-                    <h3>덕소 도로 확포장 공사</h3>
-                    <p>연장 2.5km</p>
-                </div>
-            </div>
-            <div class="portfolio-item" data-category="interior" data-aos="fade-up">
-                <div class="portfolio-thumb" style="background: linear-gradient(135deg, #8e7c68 0%, #c4a882 100%);">
-                    <div class="portfolio-thumb-inner">
-                        <svg class="portfolio-svg" viewBox="0 0 120 80" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1">
-                            <rect x="15" y="15" width="90" height="55" rx="2"/>
-                            <rect x="25" y="25" width="30" height="20" rx="1"/>
-                            <rect x="65" y="25" width="30" height="35" rx="1"/>
-                            <rect x="25" y="50" width="30" height="15" rx="1"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="portfolio-overlay">
-                    <span class="portfolio-category">인테리어</span>
-                    <h3>와부읍 카페 인테리어</h3>
-                    <p>120평 상업공간</p>
-                </div>
-            </div>
-            <div class="portfolio-item" data-category="remodel" data-aos="fade-up">
-                <div class="portfolio-thumb" style="background: linear-gradient(135deg, #5d6d7e 0%, #85929e 100%);">
-                    <div class="portfolio-thumb-inner">
-                        <svg class="portfolio-svg" viewBox="0 0 120 80" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1">
-                            <rect x="20" y="20" width="80" height="50" rx="2"/>
-                            <path d="M20 20l40-15 40 15"/>
-                            <rect x="30" y="30" width="12" height="10"/><rect x="54" y="30" width="12" height="10"/><rect x="78" y="30" width="12" height="10"/>
-                            <rect x="30" y="48" width="12" height="10"/><rect x="54" y="48" width="12" height="22"/>
-                            <path d="M78 48h12v10h-12z"/>
-                            <path d="M15 70h90" stroke-dasharray="4 3"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="portfolio-overlay">
-                    <span class="portfolio-category">리모델링</span>
-                    <h3>상가건물 외관 리모델링</h3>
-                    <p>외장 · 방수 · 단열 보강</p>
-                </div>
-            </div>
-            <div class="portfolio-item" data-category="building" data-aos="fade-up">
-                <div class="portfolio-thumb" style="background: linear-gradient(135deg, #1a5276 0%, #2e86c1 100%);">
-                    <div class="portfolio-thumb-inner">
-                        <svg class="portfolio-svg" viewBox="0 0 120 80" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1">
-                            <rect x="20" y="25" width="35" height="45" rx="1"/>
-                            <rect x="65" y="15" width="35" height="55" rx="1"/>
-                            <rect x="25" y="30" width="8" height="6"/><rect x="38" y="30" width="8" height="6"/>
-                            <rect x="25" y="42" width="8" height="6"/><rect x="38" y="42" width="8" height="6"/>
-                            <rect x="70" y="20" width="8" height="6"/><rect x="83" y="20" width="8" height="6"/>
-                            <rect x="70" y="32" width="8" height="6"/><rect x="83" y="32" width="8" height="6"/>
-                            <rect x="70" y="44" width="8" height="6"/><rect x="83" y="44" width="8" height="6"/>
-                            <rect x="32" y="56" width="12" height="14"/><rect x="75" y="56" width="12" height="14"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="portfolio-overlay">
-                    <span class="portfolio-category">건축공사</span>
-                    <h3>근린생활시설 신축</h3>
-                    <p>지하 1층 · 지상 4층</p>
-                </div>
-            </div>
-            <div class="portfolio-item large" data-category="interior" data-aos="fade-up">
-                <div class="portfolio-thumb" style="background: linear-gradient(135deg, #6c5b3e 0%, #a08c6a 100%);">
-                    <div class="portfolio-thumb-inner">
-                        <svg class="portfolio-svg" viewBox="0 0 120 80" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1">
-                            <rect x="10" y="10" width="100" height="60" rx="2"/>
-                            <rect x="18" y="18" width="40" height="25" rx="1"/>
-                            <rect x="66" y="18" width="36" height="44" rx="1"/>
-                            <line x1="18" y1="50" x2="58" y2="50"/>
-                            <line x1="18" y1="56" x2="58" y2="56"/>
-                            <line x1="18" y1="62" x2="42" y2="62"/>
-                            <circle cx="84" cy="36" r="8"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="portfolio-overlay">
-                    <span class="portfolio-category">인테리어</span>
-                    <h3>오피스 인테리어 시공</h3>
-                    <p>200평 사무공간 전면 시공</p>
-                </div>
-            </div>
-            <div class="portfolio-item" data-category="civil" data-aos="fade-up">
-                <div class="portfolio-thumb" style="background: linear-gradient(135deg, #4a6741 0%, #2d4a22 100%);">
-                    <div class="portfolio-thumb-inner">
-                        <svg class="portfolio-svg" viewBox="0 0 120 80" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1">
-                            <path d="M10 60h100"/>
-                            <path d="M20 60V30h20v30"/><path d="M50 60V20h20v40"/><path d="M80 60V35h20v25"/>
-                            <line x1="25" y1="35" x2="35" y2="35"/><line x1="25" y1="42" x2="35" y2="42"/>
-                            <line x1="55" y1="25" x2="65" y2="25"/><line x1="55" y1="35" x2="65" y2="35"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="portfolio-overlay">
-                    <span class="portfolio-category">토목공사</span>
-                    <h3>택지조성 공사</h3>
-                    <p>부지 정지 · 옹벽 · 우수관</p>
-                </div>
-            </div>
-            <div class="portfolio-item" data-category="remodel" data-aos="fade-up">
-                <div class="portfolio-thumb" style="background: linear-gradient(135deg, #7b6b5d 0%, #b8a99a 100%);">
-                    <div class="portfolio-thumb-inner">
-                        <svg class="portfolio-svg" viewBox="0 0 120 80" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1">
-                            <rect x="25" y="25" width="70" height="45" rx="2"/>
-                            <path d="M25 25l35-18 35 18"/>
-                            <rect x="35" y="35" width="10" height="8"/><rect x="55" y="35" width="10" height="8"/><rect x="75" y="35" width="10" height="8"/>
-                            <rect x="35" y="50" width="10" height="8"/>
-                            <rect x="52" y="50" width="16" height="20"/>
-                            <rect x="75" y="50" width="10" height="8"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="portfolio-overlay">
-                    <span class="portfolio-category">리모델링</span>
-                    <h3>단독주택 전체 리모델링</h3>
-                    <p>구조보강 · 내외장 전면 교체</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 
 <!-- CEO Section -->
 <section class="section ceo" id="ceo">
@@ -1599,8 +1636,37 @@ a {
         <div class="footer-top">
             <div class="footer-company">
                 <a href="#hero" class="footer-logo">
-                    <span class="logo-main">SEOAN</span>
-                    <span class="logo-sub">CONSTRUCTION</span>
+                    <svg class="svg-logo" viewBox="0 0 780 400" xmlns="http://www.w3.org/2000/svg">
+                        <g stroke="currentColor" opacity="0.3" stroke-width="0.7" fill="none">
+                            <line x1="30" y1="20" x2="750" y2="20"/><line x1="30" y1="55" x2="750" y2="55"/>
+                            <line x1="30" y1="280" x2="750" y2="280"/><line x1="30" y1="315" x2="750" y2="315"/>
+                            <line x1="45" y1="5" x2="45" y2="330"/><line x1="75" y1="5" x2="75" y2="330"/>
+                            <line x1="160" y1="5" x2="160" y2="330"/><line x1="190" y1="5" x2="190" y2="330"/>
+                            <line x1="210" y1="5" x2="210" y2="330"/><line x1="305" y1="5" x2="305" y2="330"/>
+                            <line x1="335" y1="5" x2="335" y2="330"/><line x1="465" y1="5" x2="465" y2="330"/>
+                            <line x1="495" y1="5" x2="495" y2="330"/><line x1="605" y1="5" x2="605" y2="330"/>
+                            <line x1="635" y1="5" x2="635" y2="330"/><line x1="710" y1="5" x2="710" y2="330"/>
+                            <line x1="740" y1="5" x2="740" y2="330"/>
+                        </g>
+                        <g fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.6">
+                            <path d="M 155 100 C 155 48, 55 48, 55 100 C 55 150, 155 160, 155 210 C 155 268, 55 268, 55 210"/>
+                            <path d="M 138 105 C 138 65, 72 65, 72 105 C 72 145, 138 158, 138 205 C 138 250, 72 250, 72 205" stroke-width="1.8"/>
+                            <path d="M 300 55 L 200 55 L 200 280 L 300 280"/>
+                            <line x1="200" y1="167" x2="285" y2="167"/>
+                            <rect x="215" y="72" width="68" height="78" stroke-width="1.8" rx="0"/>
+                            <rect x="215" y="184" width="68" height="78" stroke-width="1.8" rx="0"/>
+                            <circle cx="400" cy="167" r="113"/>
+                            <circle cx="400" cy="167" r="70"/>
+                            <path d="M 550 55 L 495 280"/>
+                            <path d="M 550 55 L 605 280"/>
+                            <line x1="510" y1="220" x2="590" y2="220"/>
+                            <path d="M 550 100 L 515 220" stroke-width="1.8"/>
+                            <path d="M 550 100 L 585 220" stroke-width="1.8"/>
+                            <path d="M 645 280 L 645 55 L 740 280 L 740 55"/>
+                            <path d="M 662 265 L 662 72 L 723 265 L 723 72" stroke-width="1.8"/>
+                        </g>
+                        <text x="400" y="375" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="34" letter-spacing="10" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.5">CONSTRUCTION</text>
+                    </svg>
                 </a>
                 <p class="footer-company-name">(주)서안종합건설</p>
             </div>
@@ -1619,6 +1685,45 @@ a {
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    // Intro animation
+    var intro = document.getElementById('intro');
+    var introText = intro.querySelector('.intro-text');
+    var introImg = intro.querySelector('.intro-logo-img');
+    var navLogo = document.querySelector('.navbar .logo img');
+
+    setTimeout(function() { introText.classList.add('show'); }, 500);
+    setTimeout(function() { introImg.classList.add('show'); }, 1800);
+
+    intro.addEventListener('click', function() {
+        // 현재 로고 위치
+        var imgRect = introImg.getBoundingClientRect();
+        // nav 로고 목표 위치
+        var navRect = navLogo.getBoundingClientRect();
+
+        // 현재 위치 고정
+        introImg.style.left = imgRect.left + 'px';
+        introImg.style.top = imgRect.top + 'px';
+        introImg.style.width = imgRect.width + 'px';
+
+        // 문구 먼저 사라짐
+        introText.style.opacity = '0';
+        introText.style.transition = 'opacity 0.3s ease';
+
+        // 다음 프레임에서 목표 위치로 이동
+        requestAnimationFrame(function() {
+            introImg.classList.add('fly');
+            introImg.style.left = navRect.left + 'px';
+            introImg.style.top = navRect.top + 'px';
+            introImg.style.width = navRect.width + 'px';
+        });
+
+        // 이동 완료 후 인트로 제거
+        setTimeout(function() {
+            intro.classList.add('off');
+            setTimeout(function() { intro.remove(); }, 500);
+        }, 800);
+    });
+
     // Navbar scroll
     var navbar = document.getElementById('navbar');
     window.addEventListener('scroll', function () {
@@ -1679,23 +1784,141 @@ document.addEventListener('DOMContentLoaded', function () {
     }, { threshold: 0.5 });
     counters.forEach(function (counter) { counterObserver.observe(counter); });
 
-    // Portfolio filter
-    var filterBtns = document.querySelectorAll('.filter-btn');
-    var portfolioItems = document.querySelectorAll('.portfolio-item');
-    filterBtns.forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            filterBtns.forEach(function (b) { b.classList.remove('active'); });
-            btn.classList.add('active');
-            var filter = btn.getAttribute('data-filter');
-            portfolioItems.forEach(function (item) {
-                if (filter === 'all' || item.getAttribute('data-category') === filter) {
-                    item.classList.remove('hidden');
-                    item.style.animation = 'fadeIn 0.5s ease forwards';
-                } else {
-                    item.classList.add('hidden');
-                }
-            });
+    // Portfolio slider + filter
+    var allItems = document.querySelectorAll('.portfolio-slider .portfolio-item');
+    var visibleItems = [];
+    var currentSlide = 0;
+
+    function filterItems(filter) {
+        visibleItems = [];
+        allItems.forEach(function(item) {
+            if (filter === 'all' || item.getAttribute('data-category') === filter) {
+                item.style.display = '';
+                visibleItems.push(item);
+            } else {
+                item.style.display = 'none';
+                item.classList.remove('active');
+            }
         });
+        currentSlide = 0;
+        updateSlider();
+    }
+
+    function updateSlider() {
+        if (visibleItems.length === 0) return;
+        var slider = document.querySelector('.portfolio-slider');
+        var wrapWidth = slider.parentElement.offsetWidth;
+
+        visibleItems.forEach(function(item, i) {
+            item.classList.remove('active');
+            var diff = i - currentSlide;
+            var absDiff = Math.abs(diff);
+
+            if (diff === 0) {
+                item.style.transform = 'scale(1) perspective(1000px) rotateY(0deg)';
+                item.style.opacity = '1';
+                item.style.zIndex = '5';
+                item.classList.add('active');
+            } else {
+                var rotate = diff < 0 ? 35 : -35;
+                var scale = Math.max(0.6, 1 - absDiff * 0.15);
+                var opacity = Math.max(0.3, 1 - absDiff * 0.25);
+                item.style.transform = 'scale(' + scale + ') perspective(1000px) rotateY(' + rotate + 'deg)';
+                item.style.opacity = opacity;
+                item.style.zIndex = String(5 - absDiff);
+            }
+        });
+
+        var itemWidth = 316;
+        var offset = currentSlide * itemWidth;
+        var center = wrapWidth / 2 - 250;
+        slider.style.transform = 'translateX(' + (center - offset) + 'px)';
+    }
+
+    document.querySelectorAll('.filter-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+            filterItems(btn.getAttribute('data-filter'));
+        });
+    });
+
+    document.querySelector('.slider-btn.prev').addEventListener('click', function() {
+        if (visibleItems.length === 0) return;
+        currentSlide = (currentSlide - 1 + visibleItems.length) % visibleItems.length;
+        updateSlider();
+    });
+
+    document.querySelector('.slider-btn.next').addEventListener('click', function() {
+        if (visibleItems.length === 0) return;
+        currentSlide = (currentSlide + 1) % visibleItems.length;
+        updateSlider();
+    });
+
+    filterItems('all');
+
+    // 아이템 클릭 시 해당 슬라이드로 이동
+    document.querySelector('.portfolio-slider').addEventListener('click', function(e) {
+        var item = e.target.closest('.portfolio-item');
+        if (!item) return;
+        var idx = visibleItems.indexOf(item);
+        if (idx !== -1 && idx !== currentSlide) {
+            currentSlide = idx;
+            updateSlider();
+        }
+    });
+
+    // 드래그로 슬라이드
+    var sliderWrap = document.querySelector('.portfolio-slider-wrap');
+    var isDragging = false;
+    var startX = 0;
+    var dragDist = 0;
+
+    sliderWrap.addEventListener('mousedown', function(e) {
+        isDragging = true;
+        startX = e.clientX;
+        dragDist = 0;
+    });
+
+    sliderWrap.addEventListener('mousemove', function(e) {
+        if (!isDragging) return;
+        dragDist = e.clientX - startX;
+    });
+
+    sliderWrap.addEventListener('mouseup', function() {
+        if (!isDragging) return;
+        isDragging = false;
+        if (dragDist < -50 && visibleItems.length > 0) {
+            currentSlide = (currentSlide + 1) % visibleItems.length;
+            updateSlider();
+        } else if (dragDist > 50 && visibleItems.length > 0) {
+            currentSlide = (currentSlide - 1 + visibleItems.length) % visibleItems.length;
+            updateSlider();
+        }
+    });
+
+    sliderWrap.addEventListener('mouseleave', function() {
+        isDragging = false;
+    });
+
+    // 터치 지원
+    sliderWrap.addEventListener('touchstart', function(e) {
+        startX = e.touches[0].clientX;
+        dragDist = 0;
+    });
+
+    sliderWrap.addEventListener('touchmove', function(e) {
+        dragDist = e.touches[0].clientX - startX;
+    });
+
+    sliderWrap.addEventListener('touchend', function() {
+        if (dragDist < -50 && visibleItems.length > 0) {
+            currentSlide = (currentSlide + 1) % visibleItems.length;
+            updateSlider();
+        } else if (dragDist > 50 && visibleItems.length > 0) {
+            currentSlide = (currentSlide - 1 + visibleItems.length) % visibleItems.length;
+            updateSlider();
+        }
     });
 
     // Smooth scroll

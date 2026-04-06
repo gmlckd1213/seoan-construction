@@ -672,8 +672,9 @@ a {
     position: relative;
     width: 100vw;
     margin-left: calc(-50vw + 50%);
-    overflow: visible;
+    overflow: hidden;
     cursor: grab;
+    height: 620px;
 }
 
 .portfolio-slider-wrap:active {
@@ -804,6 +805,7 @@ a {
 .slider-btn.next { right: 30px; }
 
 @media (max-width: 768px) {
+    .portfolio-slider-wrap { height: 480px; }
     .portfolio-item { width: 220px; height: 300px; }
     .portfolio-item.active { width: 320px; height: 420px; }
     .slider-btn.prev { left: 10px; }
@@ -2175,6 +2177,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     sliderWrap.addEventListener('mousemove', function(e) {
         if (!isDragging) return;
+        e.preventDefault();
         dragDist = e.clientX - startX;
     });
 
@@ -2202,7 +2205,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     sliderWrap.addEventListener('touchmove', function(e) {
         dragDist = e.touches[0].clientX - startX;
-    });
+        if (Math.abs(dragDist) > 10) {
+            e.preventDefault();
+        }
+    }, { passive: false });
 
     sliderWrap.addEventListener('touchend', function() {
         if (dragDist < -50 && visibleItems.length > 0) {

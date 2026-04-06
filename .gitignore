@@ -1,0 +1,17 @@
+# Spring Boot
+backend/build/
+backend/.gradle/
+backend/bin/
+backend/out/
+backend/uploads/
+*.class
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db

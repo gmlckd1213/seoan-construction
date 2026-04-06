@@ -695,8 +695,8 @@ a {
     overflow: hidden;
     cursor: pointer;
     flex-shrink: 0;
-    width: 300px;
-    height: 400px;
+    width: 340px;
+    height: 460px;
     transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     background: rgba(255,255,255,0.06);
     backdrop-filter: blur(10px);
@@ -705,8 +705,8 @@ a {
 }
 
 .portfolio-item.active {
-    width: 500px;
-    height: 480px;
+    width: 580px;
+    height: 560px;
     box-shadow: 0 25px 80px rgba(0,0,0,0.12);
     border: 1px solid rgba(255,255,255,0.15);
 }
@@ -804,10 +804,221 @@ a {
 .slider-btn.next { right: 30px; }
 
 @media (max-width: 768px) {
-    .portfolio-item { width: 200px; height: 280px; }
-    .portfolio-item.active { width: 300px; height: 360px; }
+    .portfolio-item { width: 220px; height: 300px; }
+    .portfolio-item.active { width: 320px; height: 420px; }
     .slider-btn.prev { left: 10px; }
     .slider-btn.next { right: 10px; }
+}
+
+/* ============================================
+   PROJECT DETAIL MODAL
+   ============================================ */
+.project-modal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+    backdrop-filter: blur(8px);
+}
+
+.project-modal.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background: var(--white);
+    border-radius: 16px;
+    max-width: 900px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    transform: translateY(30px);
+    transition: transform 0.4s ease;
+}
+
+.project-modal.open .modal-content {
+    transform: translateY(0);
+}
+
+.modal-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    width: 40px; height: 40px;
+    border: none;
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 10;
+    transition: var(--transition);
+}
+
+.modal-close:hover {
+    background: rgba(0,0,0,0.8);
+}
+
+.modal-gallery {
+    position: relative;
+    width: 100%;
+    height: 520px;
+    overflow: hidden;
+    border-radius: 16px 16px 0 0;
+}
+
+.modal-gallery-track {
+    display: flex;
+    height: 100%;
+    transition: transform 0.4s ease;
+}
+
+.modal-gallery-track img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.gallery-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 5;
+    transition: var(--transition);
+}
+
+.gallery-btn:hover { background: rgba(0,0,0,0.8); }
+.gallery-btn.gprev { left: 12px; }
+.gallery-btn.gnext { right: 12px; }
+
+.gallery-dots {
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 5;
+}
+
+.gallery-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.4);
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+    padding: 0;
+}
+
+.gallery-dot.active {
+    background: #fff;
+    transform: scale(1.2);
+}
+
+.modal-thumbs {
+    display: flex;
+    gap: 8px;
+    padding: 12px 36px 0;
+    overflow-x: auto;
+}
+
+.modal-thumb {
+    width: 72px;
+    height: 52px;
+    border-radius: 6px;
+    object-fit: cover;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: var(--transition);
+    flex-shrink: 0;
+    border: 2px solid transparent;
+}
+
+.modal-thumb.active {
+    opacity: 1;
+    border-color: var(--accent);
+}
+
+.modal-body {
+    padding: 36px;
+}
+
+.modal-category {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 8px;
+}
+
+.modal-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: #222;
+    margin-bottom: 16px;
+}
+
+.modal-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding: 20px;
+    background: var(--bg);
+    border-radius: 8px;
+}
+
+.modal-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.modal-info-label {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    font-weight: 300;
+}
+
+.modal-info-value {
+    font-size: 0.95rem;
+    color: #222;
+    font-weight: 400;
+}
+
+.modal-desc {
+    font-size: 0.9rem;
+    color: var(--text);
+    line-height: 1.8;
+    font-weight: 300;
+}
+
+@media (max-width: 768px) {
+    .modal-gallery { height: 250px; }
+    .modal-body { padding: 24px; }
+    .modal-title { font-size: 1.3rem; }
+    .modal-info { grid-template-columns: 1fr; }
 }
 
 /* ============================================
@@ -921,6 +1132,11 @@ a {
     color: var(--white);
 }
 
+.contact .section-title {
+    color: var(--white);
+    font-weight: 600;
+}
+
 .contact-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -956,15 +1172,15 @@ a {
 
 .contact-item p {
     font-size: 1rem;
-    color: var(--primary);
+    color: rgba(255,255,255,0.75);
     line-height: 1.6;
 }
 
 .form-title {
     font-family: 'Noto Serif KR', serif;
-    font-size: 1.2rem;
-    font-weight: 400;
-    color: var(--primary);
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--white);
     margin-bottom: 28px;
 }
 
@@ -1279,7 +1495,7 @@ a {
             <button class="slider-btn prev">&#8249;</button>
             <button class="slider-btn next">&#8250;</button>
             <div class="portfolio-slider">
-            <div class="portfolio-item" data-category="building">
+            <div class="portfolio-item" data-category="building" data-scale="지상 5층 · 연면적 1,200평" data-period="2024.03 ~ 2024.11" data-location="경기도 남양주시" data-client="민간 발주" data-desc="남양주 다세대주택 신축 프로젝트로, 지상 5층 규모의 주거 공간을 설계부터 시공까지 책임 완공하였습니다. 최신 건축 기법과 친환경 자재를 적용하여 입주민의 쾌적한 생활 환경을 구현했습니다." data-images="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800,https://images.unsplash.com/photo-1460317442991-0ec209397118?w=800,https://images.unsplash.com/photo-1515263487990-61b07816b324?w=800,https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800">
                 <img class="portfolio-img" src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800" alt="다세대주택">
                 <div class="portfolio-overlay">
                     <span class="portfolio-category">건축공사</span>
@@ -1287,7 +1503,7 @@ a {
                     <p>지상 5층 · 연면적 1,200평</p>
                 </div>
             </div>
-            <div class="portfolio-item" data-category="civil">
+            <div class="portfolio-item" data-category="civil" data-scale="연장 2.5km" data-period="2023.06 ~ 2024.02" data-location="경기도 남양주시 덕소" data-client="남양주시청" data-desc="덕소 지역 도로 확포장 공사로, 기존 2차선 도로를 4차선으로 확장하고 보도 및 배수시설을 정비하여 교통 흐름을 개선하였습니다." data-images="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800,https://images.unsplash.com/photo-1513828583688-c52646db42da?w=800,https://images.unsplash.com/photo-1621955511667-e2c316e4575d?w=800,https://images.unsplash.com/photo-1590674899484-d5640e854abe?w=800">
                 <img class="portfolio-img" src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800" alt="도로공사">
                 <div class="portfolio-overlay">
                     <span class="portfolio-category">토목공사</span>
@@ -1295,7 +1511,7 @@ a {
                     <p>연장 2.5km</p>
                 </div>
             </div>
-            <div class="portfolio-item" data-category="interior">
+            <div class="portfolio-item" data-category="interior" data-scale="120평 상업공간" data-period="2024.01 ~ 2024.04" data-location="경기도 남양주시 와부읍" data-client="개인 사업자" data-desc="와부읍에 위치한 카페 인테리어 시공으로, 모던한 디자인과 따뜻한 조명 연출로 감각적인 공간을 완성하였습니다. 바닥, 벽체, 천장, 조명, 가구 배치까지 턴키 방식으로 진행했습니다." data-images="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800,https://images.unsplash.com/photo-1559305616-3f99cd43e353?w=800,https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=800,https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800">
                 <img class="portfolio-img" src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800" alt="카페인테리어">
                 <div class="portfolio-overlay">
                     <span class="portfolio-category">인테리어</span>
@@ -1303,7 +1519,7 @@ a {
                     <p>120평 상업공간</p>
                 </div>
             </div>
-            <div class="portfolio-item" data-category="remodel">
+            <div class="portfolio-item" data-category="remodel" data-scale="외장 · 방수 · 단열 보강" data-period="2023.09 ~ 2024.01" data-location="경기도 남양주시" data-client="건물주 위탁" data-desc="노후 상가건물의 외관 리모델링 프로젝트입니다. 외벽 단열, 방수 처리, 외장재 교체를 통해 건물의 가치를 높이고 에너지 효율을 개선하였습니다." data-images="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800,https://images.unsplash.com/photo-1541976590-713941681591?w=800,https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800,https://images.unsplash.com/photo-1517581177682-a085bb7ffb15?w=800">
                 <img class="portfolio-img" src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800" alt="리모델링">
                 <div class="portfolio-overlay">
                     <span class="portfolio-category">리모델링</span>
@@ -1311,7 +1527,7 @@ a {
                     <p>외장 · 방수 · 단열 보강</p>
                 </div>
             </div>
-            <div class="portfolio-item" data-category="building">
+            <div class="portfolio-item" data-category="building" data-scale="지하 1층 · 지상 4층" data-period="2023.04 ~ 2023.12" data-location="경기도 남양주시" data-client="민간 발주" data-desc="근린생활시설 신축 공사로, 지하 1층 지상 4층 규모의 상업용 건물을 시공하였습니다. 철근콘크리트 구조로 내진 설계를 적용하고 효율적인 공간 배치를 실현했습니다." data-images="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800,https://images.unsplash.com/photo-1448630360428-65456659c4db?w=800,https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=800,https://images.unsplash.com/photo-1464938050520-ef2571e0d6e3?w=800">
                 <img class="portfolio-img" src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800" alt="상업건물">
                 <div class="portfolio-overlay">
                     <span class="portfolio-category">건축공사</span>
@@ -1319,7 +1535,7 @@ a {
                     <p>지하 1층 · 지상 4층</p>
                 </div>
             </div>
-            <div class="portfolio-item" data-category="interior">
+            <div class="portfolio-item" data-category="interior" data-scale="200평 사무공간 전면 시공" data-period="2024.05 ~ 2024.08" data-location="서울특별시 강남구" data-client="IT 기업" data-desc="200평 규모의 오피스 인테리어 전면 시공 프로젝트입니다. 개방형 업무 공간, 회의실, 라운지 등 효율적인 공간 구성과 세련된 마감으로 업무 환경을 한 단계 끌어올렸습니다." data-images="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800,https://images.unsplash.com/photo-1497215842964-222b430dc094?w=800,https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=800,https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=800">
                 <img class="portfolio-img" src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800" alt="오피스인테리어">
                 <div class="portfolio-overlay">
                     <span class="portfolio-category">인테리어</span>
@@ -1327,7 +1543,7 @@ a {
                     <p>200평 사무공간 전면 시공</p>
                 </div>
             </div>
-            <div class="portfolio-item" data-category="civil">
+            <div class="portfolio-item" data-category="civil" data-scale="부지 정지 · 옹벽 · 우수관" data-period="2023.03 ~ 2023.10" data-location="경기도 남양주시" data-client="LH 한국토지주택공사" data-desc="택지조성 공사로, 부지 정지 작업과 옹벽 설치, 우수관로 매설 등 기반 인프라를 구축하였습니다. 정밀 측량과 체계적 공정 관리로 안전하게 완공했습니다." data-images="https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=800,https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800,https://images.unsplash.com/photo-1590674899484-d5640e854abe?w=800,https://images.unsplash.com/photo-1541976590-713941681591?w=800">
                 <img class="portfolio-img" src="https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=800" alt="택지조성">
                 <div class="portfolio-overlay">
                     <span class="portfolio-category">토목공사</span>
@@ -1335,7 +1551,7 @@ a {
                     <p>부지 정지 · 옹벽 · 우수관</p>
                 </div>
             </div>
-            <div class="portfolio-item" data-category="remodel">
+            <div class="portfolio-item" data-category="remodel" data-scale="구조보강 · 내외장 전면 교체" data-period="2024.02 ~ 2024.07" data-location="경기도 남양주시" data-client="개인 주택 소유자" data-desc="노후 단독주택의 전체 리모델링 프로젝트입니다. 구조 보강부터 내외장 전면 교체, 설비 교체까지 종합적으로 시공하여 새 집과 같은 품질을 구현했습니다." data-images="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800,https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800,https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800,https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800">
                 <img class="portfolio-img" src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800" alt="주택리모델링">
                 <div class="portfolio-overlay">
                     <span class="portfolio-category">리모델링</span>
@@ -1507,8 +1723,7 @@ a {
         </div>
         <div class="ceo-content" data-aos="fade-up">
             <div class="ceo-photo-area">
-                <div class="ceo-photo" style="background: linear-gradient(135deg, #2c3e50, #34495e);">
-                    <div class="ceo-initial">李</div>
+                <div class="ceo-photo" style="background: url('img/ceo.jpg') center/cover;">
                 </div>
                 <h3 class="ceo-name">이 혁 재</h3>
                 <p class="ceo-title">대표이사</p>
@@ -1630,45 +1845,48 @@ a {
     </div>
 </section>
 
+<!-- Project Detail Modal -->
+<div class="project-modal" id="projectModal">
+    <div class="modal-content">
+        <button class="modal-close">&times;</button>
+        <div class="modal-gallery">
+            <div class="modal-gallery-track" id="galleryTrack"></div>
+            <button class="gallery-btn gprev">&#8249;</button>
+            <button class="gallery-btn gnext">&#8250;</button>
+            <div class="gallery-dots" id="galleryDots"></div>
+        </div>
+        <div class="modal-thumbs" id="modalThumbs"></div>
+        <div class="modal-body">
+            <div class="modal-category" id="modalCategory"></div>
+            <h2 class="modal-title" id="modalTitle"></h2>
+            <div class="modal-info">
+                <div class="modal-info-item">
+                    <span class="modal-info-label">공사 규모</span>
+                    <span class="modal-info-value" id="modalScale"></span>
+                </div>
+                <div class="modal-info-item">
+                    <span class="modal-info-label">공사 기간</span>
+                    <span class="modal-info-value" id="modalPeriod"></span>
+                </div>
+                <div class="modal-info-item">
+                    <span class="modal-info-label">위치</span>
+                    <span class="modal-info-value" id="modalLocation"></span>
+                </div>
+                <div class="modal-info-item">
+                    <span class="modal-info-label">발주처</span>
+                    <span class="modal-info-value" id="modalClient"></span>
+                </div>
+            </div>
+            <p class="modal-desc" id="modalDesc"></p>
+        </div>
+    </div>
+</div>
+
 <!-- Footer -->
 <footer class="footer">
     <div class="container">
         <div class="footer-top">
             <div class="footer-company">
-                <a href="#hero" class="footer-logo">
-                    <svg class="svg-logo" viewBox="0 0 780 400" xmlns="http://www.w3.org/2000/svg">
-                        <g stroke="currentColor" opacity="0.3" stroke-width="0.7" fill="none">
-                            <line x1="30" y1="20" x2="750" y2="20"/><line x1="30" y1="55" x2="750" y2="55"/>
-                            <line x1="30" y1="280" x2="750" y2="280"/><line x1="30" y1="315" x2="750" y2="315"/>
-                            <line x1="45" y1="5" x2="45" y2="330"/><line x1="75" y1="5" x2="75" y2="330"/>
-                            <line x1="160" y1="5" x2="160" y2="330"/><line x1="190" y1="5" x2="190" y2="330"/>
-                            <line x1="210" y1="5" x2="210" y2="330"/><line x1="305" y1="5" x2="305" y2="330"/>
-                            <line x1="335" y1="5" x2="335" y2="330"/><line x1="465" y1="5" x2="465" y2="330"/>
-                            <line x1="495" y1="5" x2="495" y2="330"/><line x1="605" y1="5" x2="605" y2="330"/>
-                            <line x1="635" y1="5" x2="635" y2="330"/><line x1="710" y1="5" x2="710" y2="330"/>
-                            <line x1="740" y1="5" x2="740" y2="330"/>
-                        </g>
-                        <g fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.6">
-                            <path d="M 155 100 C 155 48, 55 48, 55 100 C 55 150, 155 160, 155 210 C 155 268, 55 268, 55 210"/>
-                            <path d="M 138 105 C 138 65, 72 65, 72 105 C 72 145, 138 158, 138 205 C 138 250, 72 250, 72 205" stroke-width="1.8"/>
-                            <path d="M 300 55 L 200 55 L 200 280 L 300 280"/>
-                            <line x1="200" y1="167" x2="285" y2="167"/>
-                            <rect x="215" y="72" width="68" height="78" stroke-width="1.8" rx="0"/>
-                            <rect x="215" y="184" width="68" height="78" stroke-width="1.8" rx="0"/>
-                            <circle cx="400" cy="167" r="113"/>
-                            <circle cx="400" cy="167" r="70"/>
-                            <path d="M 550 55 L 495 280"/>
-                            <path d="M 550 55 L 605 280"/>
-                            <line x1="510" y1="220" x2="590" y2="220"/>
-                            <path d="M 550 100 L 515 220" stroke-width="1.8"/>
-                            <path d="M 550 100 L 585 220" stroke-width="1.8"/>
-                            <path d="M 645 280 L 645 55 L 740 280 L 740 55"/>
-                            <path d="M 662 265 L 662 72 L 723 265 L 723 72" stroke-width="1.8"/>
-                        </g>
-                        <text x="400" y="375" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="34" letter-spacing="10" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.5">CONSTRUCTION</text>
-                    </svg>
-                </a>
-                <p class="footer-company-name">(주)서안종합건설</p>
             </div>
             <div class="footer-info">
                 <p>대표이사: 이혁재</p>
@@ -1857,14 +2075,89 @@ document.addEventListener('DOMContentLoaded', function () {
 
     filterItems('all');
 
-    // 아이템 클릭 시 해당 슬라이드로 이동
+    // 아이템 클릭 시: active면 모달, 아니면 해당 슬라이드로 이동
+    var modal = document.getElementById('projectModal');
+
     document.querySelector('.portfolio-slider').addEventListener('click', function(e) {
         var item = e.target.closest('.portfolio-item');
         if (!item) return;
         var idx = visibleItems.indexOf(item);
-        if (idx !== -1 && idx !== currentSlide) {
+        if (idx === -1) return;
+
+        if (idx === currentSlide) {
+            // active 아이템 클릭 → 모달 열기
+            var overlay = item.querySelector('.portfolio-overlay');
+            var images = (item.dataset.images || '').split(',');
+            var galleryTrack = document.getElementById('galleryTrack');
+            var galleryDots = document.getElementById('galleryDots');
+            var modalThumbs = document.getElementById('modalThumbs');
+            var galleryIdx = 0;
+
+            // 갤러리 이미지 생성
+            galleryTrack.innerHTML = '';
+            galleryDots.innerHTML = '';
+            modalThumbs.innerHTML = '';
+            images.forEach(function(src, i) {
+                var img = document.createElement('img');
+                img.src = src.trim();
+                img.alt = '';
+                galleryTrack.appendChild(img);
+
+                var dot = document.createElement('button');
+                dot.className = 'gallery-dot' + (i === 0 ? ' active' : '');
+                galleryDots.appendChild(dot);
+
+                var thumb = document.createElement('img');
+                thumb.src = src.trim();
+                thumb.className = 'modal-thumb' + (i === 0 ? ' active' : '');
+                modalThumbs.appendChild(thumb);
+            });
+
+            function goGallery(n) {
+                galleryIdx = (n + images.length) % images.length;
+                galleryTrack.style.transform = 'translateX(-' + (galleryIdx * 100) + '%)';
+                galleryDots.querySelectorAll('.gallery-dot').forEach(function(d, i) {
+                    d.classList.toggle('active', i === galleryIdx);
+                });
+                modalThumbs.querySelectorAll('.modal-thumb').forEach(function(t, i) {
+                    t.classList.toggle('active', i === galleryIdx);
+                });
+            }
+
+            modal.querySelector('.gprev').onclick = function() { goGallery(galleryIdx - 1); };
+            modal.querySelector('.gnext').onclick = function() { goGallery(galleryIdx + 1); };
+            galleryDots.querySelectorAll('.gallery-dot').forEach(function(dot, i) {
+                dot.onclick = function() { goGallery(i); };
+            });
+            modalThumbs.querySelectorAll('.modal-thumb').forEach(function(th, i) {
+                th.onclick = function() { goGallery(i); };
+            });
+
+            document.getElementById('modalCategory').textContent = overlay.querySelector('.portfolio-category').textContent;
+            document.getElementById('modalTitle').textContent = overlay.querySelector('h3').textContent;
+            document.getElementById('modalScale').textContent = item.dataset.scale || '';
+            document.getElementById('modalPeriod').textContent = item.dataset.period || '';
+            document.getElementById('modalLocation').textContent = item.dataset.location || '';
+            document.getElementById('modalClient').textContent = item.dataset.client || '';
+            document.getElementById('modalDesc').textContent = item.dataset.desc || '';
+            modal.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        } else {
             currentSlide = idx;
             updateSlider();
+        }
+    });
+
+    // 모달 닫기
+    document.querySelector('.modal-close').addEventListener('click', function() {
+        modal.classList.remove('open');
+        document.body.style.overflow = '';
+    });
+
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.classList.remove('open');
+            document.body.style.overflow = '';
         }
     });
 

@@ -149,6 +149,41 @@ body { font-family:'Noto Sans KR',sans-serif; background:var(--bg); color:var(--
     font-size:0.85rem; margin-bottom:16px;
 }
 
+/* 로딩 오버레이 */
+#loadingOverlay {
+    position:fixed; top:0; left:0; width:100%; height:100%;
+    background:rgba(0,0,0,0.5); z-index:99998;
+    display:none; align-items:center; justify-content:center; flex-direction:column;
+}
+#loadingOverlay.show { display:flex; }
+.loading-box {
+    background:var(--white); padding:36px 48px; border-radius:12px;
+    text-align:center; box-shadow:0 4px 24px rgba(0,0,0,0.15);
+}
+.loading-spinner {
+    width:40px; height:40px; border:3px solid var(--border);
+    border-top-color:var(--accent); border-radius:50%;
+    animation:spin 0.8s linear infinite; margin:0 auto 16px;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+.loading-text { font-size:0.9rem; color:var(--text); }
+.loading-progress {
+    width:200px; height:4px; background:var(--border); border-radius:2px;
+    margin-top:12px; overflow:hidden;
+}
+.loading-progress-bar {
+    height:100%; background:var(--accent); border-radius:2px;
+    transition:width 0.3s ease; width:0%;
+}
+
+/* 새 이미지 대표사진 */
+.previews .prev-item.new-thumb { outline:3px solid var(--accent); border-radius:6px; }
+.previews .prev-item.new-thumb::after {
+    content:'대표'; position:absolute; bottom:2px; left:2px;
+    background:var(--accent); color:#fff; font-size:0.55rem; padding:1px 5px;
+    border-radius:3px; font-weight:500;
+}
+
 @media (max-width:900px) {
     .layout { grid-template-columns:1fr; }
 }
@@ -197,6 +232,15 @@ body { font-family:'Noto Sans KR',sans-serif; background:var(--bg); color:var(--
         <button onclick="openSettings()">설정</button>
         <a href="projects0.html">사이트 보기</a>
         <button onclick="doLogout()">로그아웃</button>
+    </div>
+</div>
+
+<!-- 로딩 오버레이 -->
+<div id="loadingOverlay">
+    <div class="loading-box">
+        <div class="loading-spinner"></div>
+        <div class="loading-text" id="loadingText">처리 중...</div>
+        <div class="loading-progress"><div class="loading-progress-bar" id="loadingBar"></div></div>
     </div>
 </div>
 
@@ -358,6 +402,15 @@ function checkToken() {
 }
 
 // ========== 상태 메시지 ==========
+function showLoading(text, progress) {
+    document.getElementById('loadingOverlay').classList.add('show');
+    document.getElementById('loadingText').textContent = text || '처리 중...';
+    document.getElementById('loadingBar').style.width = (progress || 0) + '%';
+}
+function hideLoading() {
+    document.getElementById('loadingOverlay').classList.remove('show');
+}
+
 function showStatus(msg, type) {
     var el = document.getElementById('statusMsg');
     el.textContent = msg;
@@ -413,6 +466,7 @@ async function ghDelete(path, sha, message) {
 // ========== 데이터 ==========
 var portfolios = [];
 var newFiles = [];
+var newThumbIndex = 0;
 var removeImages = [];
 
 async function loadData() {
@@ -479,16 +533,25 @@ document.getElementById('fFiles').addEventListener('change', function() {
 function renderNewPreviews() {
     var area = document.getElementById('newPreviews');
     area.innerHTML = '';
+    if (newThumbIndex >= newFiles.length) newThumbIndex = 0;
     newFiles.forEach(function(file, i) {
         var reader = new FileReader();
         reader.onload = function(e) {
             var div = document.createElement('div');
-            div.className = 'prev-item';
-            div.innerHTML = '<img src="' + e.target.result + '"><button class="remove-btn" onclick="removeNewFile(' + i + ')">×</button>';
+            div.className = 'prev-item' + (i === newThumbIndex ? ' new-thumb' : '');
+            div.title = '더블클릭: 대표사진 설정';
+            div.ondblclick = function() { setNewThumb(i); };
+            div.innerHTML = '<img src="' + e.target.result + '"><button class="remove-btn" onclick="event.stopPropagation();removeNewFile(' + i + ')">×</button>';
             area.appendChild(div);
         };
         reader.readAsDataURL(file);
     });
+}
+
+function setNewThumb(idx) {
+    newThumbIndex = idx;
+    renderNewPreviews();
+    showStatus('대표사진이 설정되었습니다.', 'success');
 }
 
 function removeNewFile(idx) {
@@ -557,21 +620,28 @@ async function submitForm() {
     }
 
     // 새 이미지 업로드
+    var totalSteps = (newFiles.length || 0) + 1;
+    var doneSteps = 0;
     if (newFiles.length > 0) {
-        showStatus('이미지 업로드 중... (0/' + newFiles.length + ')', 'loading');
+        showLoading('이미지 업로드 중... (0/' + newFiles.length + ')', 0);
         for (var i = 0; i < newFiles.length; i++) {
-            showStatus('이미지 업로드 중... (' + (i+1) + '/' + newFiles.length + ')', 'loading');
+            doneSteps++;
+            showLoading('이미지 업로드 중... (' + doneSteps + '/' + newFiles.length + ')', Math.round(doneSteps / totalSteps * 100));
             var base64 = await fileToBase64(newFiles[i]);
             var ext = newFiles[i].name.split('.').pop().toLowerCase() || 'jpg';
             var fileName = id + '-' + (item.images.length + 1) + '.' + ext;
             var path = 'img/portfolio/' + fileName;
             await ghPutBinary(path, base64, '이미지 업로드: ' + fileName);
             item.images.push(path);
+            // 새 등록 시 첫 번째 이미지가 대표 (newThumbIndex 기준)
+            if (!isEdit && newThumbIndex === i) {
+                item.thumbnail = path;
+            }
         }
     }
 
     // 포트폴리오 데이터 업데이트
-    showStatus('데이터 저장 중...', 'loading');
+    showLoading('데이터 저장 중...', 90);
     if (isEdit) {
         var idx = portfolios.findIndex(function(p) { return p.id === editId; });
         if (idx !== -1) portfolios[idx] = item;
@@ -585,6 +655,7 @@ async function submitForm() {
     var sha = jsonFile ? jsonFile.sha : null;
     await ghPut('data/portfolios.json', jsonContent, (isEdit ? '수정' : '등록') + ': ' + title, sha);
 
+    hideLoading();
     showStatus((isEdit ? '수정' : '등록') + ' 완료!', 'success');
     clearForm();
     renderList();
@@ -673,6 +744,7 @@ function clearForm() {
     document.getElementById('submitBtn').textContent = '등록하기';
     document.getElementById('cancelBtn').style.display = 'none';
     newFiles = [];
+    newThumbIndex = 0;
     removeImages = [];
     selectedThumbnail = null;
 }
@@ -683,11 +755,12 @@ async function deleteItem(idx) {
     if (!getConfig().token) { showStatus('GitHub 토큰을 먼저 설정해주세요.', 'error'); return; }
 
     var p = portfolios[idx];
-    showStatus('삭제 중...', 'loading');
+    showLoading('삭제 중...', 10);
 
     // 이미지 파일 삭제
     if (p.images) {
         for (var i = 0; i < p.images.length; i++) {
+            showLoading('이미지 삭제 중... (' + (i+1) + '/' + p.images.length + ')', Math.round((i+1) / (p.images.length+1) * 80));
             var imgFile = await ghGet(p.images[i]);
             if (imgFile && imgFile.sha) {
                 await ghDelete(p.images[i], imgFile.sha, '이미지 삭제: ' + p.images[i]);
@@ -696,11 +769,13 @@ async function deleteItem(idx) {
     }
 
     // 데이터에서 제거
+    showLoading('데이터 저장 중...', 90);
     portfolios.splice(idx, 1);
     var jsonContent = JSON.stringify({ portfolios: portfolios }, null, 2);
     var jsonFile = await ghGet('data/portfolios.json');
     await ghPut('data/portfolios.json', jsonContent, '삭제: ' + p.title, jsonFile ? jsonFile.sha : null);
 
+    hideLoading();
     showStatus('삭제 완료!', 'success');
     clearForm();
     renderList();

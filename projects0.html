@@ -1983,6 +1983,7 @@ document.addEventListener('DOMContentLoaded', function () {
             div.setAttribute('data-location', p.location || '');
             div.setAttribute('data-client', p.client || '');
             div.setAttribute('data-desc', p.desc || '');
+            div.setAttribute('data-thumbnail', p.thumbnail ? ghImgUrl(p.thumbnail) : '');
             div.setAttribute('data-images', imagesStr);
             div.innerHTML = '<img class="portfolio-img" src="' + imgSrc + '" alt="' + (p.title || '') + '">' +
                 '<div class="portfolio-overlay">' +
@@ -2078,7 +2079,12 @@ document.addEventListener('DOMContentLoaded', function () {
         if (idx === currentSlide) {
             // active 아이템 클릭 → 모달 열기
             var overlay = item.querySelector('.portfolio-overlay');
-            var images = (item.dataset.images || '').split(',');
+            var images = (item.dataset.images || '').split(',').filter(function(s){return s.trim();});
+            var thumb = item.dataset.thumbnail;
+            if (thumb) {
+                images = images.filter(function(s){return s.trim() !== thumb;});
+                images.unshift(thumb);
+            }
             var galleryTrack = document.getElementById('galleryTrack');
             var galleryDots = document.getElementById('galleryDots');
             var modalThumbs = document.getElementById('modalThumbs');

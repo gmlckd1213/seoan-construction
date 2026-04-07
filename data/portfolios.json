@@ -1,3 +1,19 @@
 {
-  "portfolios": []
+  "portfolios": [
+    {
+      "id": "mnonr0gv64gt",
+      "title": "이혁재 test",
+      "category": "building",
+      "displayCategory": "건축공사",
+      "scale": "지상 6층 1200평",
+      "period": "2024.03~2024.06",
+      "location": "경기도 남양주시",
+      "client": "민간발주",
+      "desc": "이혁재 바보",
+      "images": [
+        "img/portfolio/mnonr0gv64gt-1.jpg",
+        "img/portfolio/mnonr0gv64gt-2.jpg"
+      ]
+    }
+  ]
 }

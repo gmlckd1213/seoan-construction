@@ -280,7 +280,10 @@ body { font-family:'Noto Sans KR',sans-serif; background:var(--bg); color:var(--
 
         <!-- 오른쪽: 목록 -->
         <div class="card">
-            <h2>시공실적 목록</h2>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+                <h2 style="margin-bottom:0">시공실적 목록</h2>
+                <button class="btn btn-primary" onclick="clearForm();document.getElementById('formCard').scrollIntoView({behavior:'smooth'})">+ New</button>
+            </div>
             <table class="list-table">
                 <thead>
                     <tr><th>사진</th><th>카테고리</th><th>제목</th><th>위치</th><th>관리</th></tr>

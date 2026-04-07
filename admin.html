@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 - 서안종합건설</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+:root {
+    --primary: #3d3630;
+    --accent: #b8926a;
+    --bg: #f6f3ed;
+    --bg-warm: #f0ece4;
+    --text: #4a4239;
+    --text-light: #9a8e80;
+    --white: #faf8f4;
+    --border: #e0d8cc;
+    --danger: #c0392b;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Noto Sans KR',sans-serif; background:var(--bg); color:var(--text); }
+
+/* 로그인 게이트 */
+#loginGate {
+    position:fixed; top:0; left:0; width:100%; height:100%;
+    background:#2c2722; z-index:99999;
+    display:flex; align-items:center; justify-content:center;
+}
+#loginGate.hidden { display:none; }
+.login-box {
+    background:var(--white); padding:48px 40px; border-radius:12px;
+    box-shadow:0 4px 24px rgba(0,0,0,0.08); width:100%; max-width:380px;
+}
+.login-box h1 { font-size:1.3rem; color:var(--primary); margin-bottom:8px; }
+.login-box p { font-size:0.85rem; color:var(--text-light); margin-bottom:24px; }
+.login-box input {
+    width:100%; padding:12px 14px; border:1px solid var(--border); border-radius:6px;
+    font-size:0.95rem; margin-bottom:12px; outline:none;
+}
+.login-box input:focus { border-color:var(--accent); }
+
+/* 헤더 */
+.header {
+    background:var(--primary); color:var(--white); padding:14px 32px;
+    display:flex; justify-content:space-between; align-items:center;
+    position:sticky; top:0; z-index:100;
+}
+.header h1 { font-size:1rem; font-weight:500; }
+.header-btns { display:flex; gap:12px; align-items:center; }
+.header a, .header button {
+    color:var(--accent); text-decoration:none; font-size:0.8rem;
+    background:none; border:none; cursor:pointer; font-family:inherit;
+}
+
+/* 레이아웃 */
+.container { max-width:1100px; margin:24px auto; padding:0 20px; }
+.layout { display:grid; grid-template-columns:420px 1fr; gap:24px; }
+
+/* 카드 */
+.card {
+    background:var(--white); border-radius:10px; padding:28px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+.card h2 { font-size:1.1rem; font-weight:500; margin-bottom:20px; }
+
+/* 폼 */
+.form-group { margin-bottom:16px; }
+.form-group label { display:block; font-size:0.78rem; color:var(--text-light); margin-bottom:5px; }
+.form-group input, .form-group textarea, .form-group select {
+    width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:6px;
+    font-size:0.88rem; font-family:inherit; outline:none; background:#fff;
+}
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color:var(--accent); }
+.form-group textarea { resize:vertical; min-height:100px; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+/* 파일 업로드 */
+.file-area {
+    border:2px dashed var(--border); border-radius:8px; padding:24px;
+    text-align:center; color:var(--text-light); font-size:0.82rem; cursor:pointer;
+}
+.file-area:hover { border-color:var(--accent); }
+.file-area input { display:none; }
+.previews { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+.previews .prev-item { position:relative; }
+.previews img { width:80px; height:60px; object-fit:cover; border-radius:4px; }
+.previews .remove-btn {
+    position:absolute; top:-6px; right:-6px; width:18px; height:18px;
+    background:var(--danger); color:#fff; border:none; border-radius:50%;
+    font-size:0.65rem; cursor:pointer; display:flex; align-items:center; justify-content:center;
+}
+
+/* 버튼 */
+.btn {
+    padding:10px 24px; border:none; border-radius:6px; font-size:0.85rem;
+    cursor:pointer; font-family:inherit; transition:background 0.3s;
+}
+.btn-primary { background:var(--primary); color:#fff; }
+.btn-primary:hover { background:#5a4f44; }
+.btn-danger { background:var(--danger); color:#fff; font-size:0.78rem; padding:6px 12px; }
+.btn-edit { background:var(--accent); color:#fff; font-size:0.78rem; padding:6px 12px; }
+.btn-cancel { background:var(--border); color:var(--text); font-size:0.85rem; }
+.form-btns { display:flex; gap:10px; margin-top:20px; }
+
+/* 상태 */
+.status {
+    padding:10px 14px; border-radius:6px; font-size:0.85rem; margin-bottom:16px; display:none;
+}
+.status.success { display:block; background:#e8f5e9; color:#2e7d32; }
+.status.error { display:block; background:#ffeaea; color:#c0392b; }
+.status.loading { display:block; background:#fff3e0; color:#e65100; }
+
+/* 목록 테이블 */
+.list-table { width:100%; border-collapse:collapse; }
+.list-table th {
+    background:var(--bg-warm); padding:10px 12px; font-size:0.75rem;
+    font-weight:500; text-align:left; color:var(--text-light);
+}
+.list-table td { padding:12px; font-size:0.85rem; border-top:1px solid var(--border); vertical-align:middle; }
+.list-table .thumb { width:50px; height:38px; object-fit:cover; border-radius:4px; }
+.list-table .cat-tag {
+    display:inline-block; padding:2px 8px; border-radius:3px;
+    font-size:0.7rem; background:var(--bg-warm); color:#5a4f44;
+}
+.actions { display:flex; gap:6px; }
+
+/* 설정 모달 */
+#settingsModal {
+    position:fixed; top:0; left:0; width:100%; height:100%;
+    background:rgba(0,0,0,0.5); z-index:9999;
+    display:none; align-items:center; justify-content:center;
+}
+#settingsModal.open { display:flex; }
+.settings-box {
+    background:var(--white); padding:32px; border-radius:10px; width:90%; max-width:450px;
+}
+.settings-box h3 { margin-bottom:16px; font-size:1rem; }
+
+/* 토큰 없음 알림 */
+.token-warning {
+    background:#fff3e0; color:#e65100; padding:12px 16px; border-radius:6px;
+    font-size:0.85rem; margin-bottom:16px;
+}
+
+@media (max-width:900px) {
+    .layout { grid-template-columns:1fr; }
+}
+    </style>
+</head>
+<body>
+
+<!-- 로그인 게이트 -->
+<div id="loginGate">
+    <div class="login-box">
+        <h1>관리자 로그인</h1>
+        <p>(주)서안종합건설 관리 시스템</p>
+        <input type="password" id="loginPw" placeholder="비밀번호" onkeydown="if(event.key==='Enter')doLogin()">
+        <button class="btn btn-primary" style="width:100%" onclick="doLogin()">로그인</button>
+        <p id="loginErr" style="color:#c0392b;font-size:0.8rem;margin-top:8px;display:none">비밀번호가 올바르지 않습니다.</p>
+    </div>
+</div>
+
+<!-- 설정 모달 -->
+<div id="settingsModal">
+    <div class="settings-box">
+        <h3>GitHub 설정</h3>
+        <div class="form-group">
+            <label>Personal Access Token (repo 권한)</label>
+            <input type="password" id="tokenInput" placeholder="ghp_xxxxx...">
+        </div>
+        <div class="form-group">
+            <label>GitHub 사용자명</label>
+            <input type="text" id="ownerInput" placeholder="gmlckd1213">
+        </div>
+        <div class="form-group">
+            <label>레포 이름</label>
+            <input type="text" id="repoInput" placeholder="seoan-construction">
+        </div>
+        <div class="form-btns">
+            <button class="btn btn-primary" onclick="saveSettings()">저장</button>
+            <button class="btn btn-cancel" onclick="closeSettings()">닫기</button>
+        </div>
+    </div>
+</div>
+
+<!-- 헤더 -->
+<div class="header">
+    <h1>(주)서안종합건설 관리자</h1>
+    <div class="header-btns">
+        <button onclick="openSettings()">설정</button>
+        <a href="projects0.html">사이트 보기</a>
+        <button onclick="doLogout()">로그아웃</button>
+    </div>
+</div>
+
+<div class="container">
+    <div id="tokenWarning" class="token-warning" style="display:none">
+        GitHub 토큰이 설정되지 않았습니다. 상단 <strong>설정</strong> 버튼에서 토큰을 입력해주세요.
+    </div>
+
+    <div id="statusMsg" class="status"></div>
+
+    <div class="layout">
+        <!-- 왼쪽: 폼 -->
+        <div class="card" id="formCard">
+            <h2 id="formTitle">시공실적 등록</h2>
+            <input type="hidden" id="editId" value="">
+
+            <div class="form-group">
+                <label>제목 *</label>
+                <input type="text" id="fTitle" placeholder="예: 남양주 다세대주택 신축">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>카테고리 *</label>
+                    <select id="fCategory">
+                        <option value="">선택</option>
+                        <option value="building">건물</option>
+                        <option value="civil">토목</option>
+                        <option value="interior">인테리어</option>
+                        <option value="remodel">리모델링</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>공사 기간</label>
+                    <input type="text" id="fPeriod" placeholder="2024.03 ~ 2024.11">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>공사 규모</label>
+                    <input type="text" id="fScale" placeholder="지상 5층 · 연면적 1,200평">
+                </div>
+                <div class="form-group">
+                    <label>위치</label>
+                    <input type="text" id="fLocation" placeholder="경기도 남양주시">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>발주처</label>
+                <input type="text" id="fClient" placeholder="민간 발주">
+            </div>
+
+            <div class="form-group">
+                <label>상세 설명</label>
+                <textarea id="fDesc" placeholder="프로젝트 상세 설명"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>사진 업로드 (여러 장 가능)</label>
+                <div class="file-area" onclick="document.getElementById('fFiles').click()">
+                    클릭하여 이미지 선택
+                    <input type="file" id="fFiles" multiple accept="image/*">
+                </div>
+                <div class="previews" id="newPreviews"></div>
+            </div>
+
+            <div id="existingImages" style="display:none">
+                <div class="form-group">
+                    <label>등록된 이미지</label>
+                    <div class="previews" id="existPreviews"></div>
+                </div>
+            </div>
+
+            <div class="form-btns">
+                <button class="btn btn-primary" id="submitBtn" onclick="submitForm()">등록하기</button>
+                <button class="btn btn-cancel" id="cancelBtn" style="display:none" onclick="cancelEdit()">취소</button>
+            </div>
+        </div>
+
+        <!-- 오른쪽: 목록 -->
+        <div class="card">
+            <h2>시공실적 목록</h2>
+            <table class="list-table">
+                <thead>
+                    <tr><th>사진</th><th>카테고리</th><th>제목</th><th>위치</th><th>관리</th></tr>
+                </thead>
+                <tbody id="listBody">
+                    <tr><td colspan="5" style="text-align:center;padding:30px;color:var(--text-light)">로딩 중...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+// ========== 설정 ==========
+var ADMIN_PW_HASH = '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'; // "password"
+var CAT_LABELS = { building:'건축공사', civil:'토목공사', interior:'인테리어', remodel:'리모델링' };
+
+function getConfig() {
+    return {
+        token: localStorage.getItem('gh_token') || '',
+        owner: localStorage.getItem('gh_owner') || 'gmlckd1213',
+        repo: localStorage.getItem('gh_repo') || 'seoan-construction'
+    };
+}
+
+// ========== 로그인 ==========
+async function sha256(msg) {
+    var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
+    return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0')}).join('');
+}
+
+async function doLogin() {
+    var pw = document.getElementById('loginPw').value;
+    var hash = await sha256(pw);
+    if (hash === ADMIN_PW_HASH) {
+        localStorage.setItem('admin_auth', '1');
+        document.getElementById('loginGate').classList.add('hidden');
+        init();
+    } else {
+        document.getElementById('loginErr').style.display = 'block';
+    }
+}
+
+function doLogout() {
+    localStorage.removeItem('admin_auth');
+    location.reload();
+}
+
+// ========== 설정 모달 ==========
+function openSettings() {
+    var c = getConfig();
+    document.getElementById('tokenInput').value = c.token;
+    document.getElementById('ownerInput').value = c.owner;
+    document.getElementById('repoInput').value = c.repo;
+    document.getElementById('settingsModal').classList.add('open');
+}
+
+function closeSettings() { document.getElementById('settingsModal').classList.remove('open'); }
+
+function saveSettings() {
+    localStorage.setItem('gh_token', document.getElementById('tokenInput').value.trim());
+    localStorage.setItem('gh_owner', document.getElementById('ownerInput').value.trim());
+    localStorage.setItem('gh_repo', document.getElementById('repoInput').value.trim());
+    closeSettings();
+    checkToken();
+    showStatus('설정이 저장되었습니다.', 'success');
+}
+
+function checkToken() {
+    var t = localStorage.getItem('gh_token');
+    document.getElementById('tokenWarning').style.display = t ? 'none' : 'block';
+}
+
+// ========== 상태 메시지 ==========
+function showStatus(msg, type) {
+    var el = document.getElementById('statusMsg');
+    el.textContent = msg;
+    el.className = 'status ' + type;
+    if (type === 'success') setTimeout(function(){ el.style.display = 'none'; }, 3000);
+}
+
+// ========== GitHub API ==========
+async function ghGet(path) {
+    var c = getConfig();
+    var res = await fetch('https://api.github.com/repos/' + c.owner + '/' + c.repo + '/contents/' + path, {
+        headers: { 'Authorization': 'Bearer ' + c.token, 'Accept': 'application/vnd.github.v3+json' }
+    });
+    if (res.status === 404) return null;
+    return res.json();
+}
+
+async function ghPut(path, content, message, sha) {
+    var c = getConfig();
+    var body = { message: message, content: btoa(unescape(encodeURIComponent(content))) };
+    if (sha) body.sha = sha;
+    var res = await fetch('https://api.github.com/repos/' + c.owner + '/' + c.repo + '/contents/' + path, {
+        method: 'PUT',
+        headers: { 'Authorization': 'Bearer ' + c.token, 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+    });
+    return res.json();
+}
+
+async function ghPutBinary(path, base64, message) {
+    var c = getConfig();
+    var existing = await ghGet(path);
+    var body = { message: message, content: base64 };
+    if (existing && existing.sha) body.sha = existing.sha;
+    var res = await fetch('https://api.github.com/repos/' + c.owner + '/' + c.repo + '/contents/' + path, {
+        method: 'PUT',
+        headers: { 'Authorization': 'Bearer ' + c.token, 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+    });
+    return res.json();
+}
+
+async function ghDelete(path, sha, message) {
+    var c = getConfig();
+    var res = await fetch('https://api.github.com/repos/' + c.owner + '/' + c.repo + '/contents/' + path, {
+        method: 'DELETE',
+        headers: { 'Authorization': 'Bearer ' + c.token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: message, sha: sha })
+    });
+    return res.json();
+}
+
+// ========== 데이터 ==========
+var portfolios = [];
+var newFiles = [];
+var removeImages = [];
+
+async function loadData() {
+    try {
+        var res = await fetch('data/portfolios.json?v=' + Date.now());
+        var data = await res.json();
+        portfolios = data.portfolios || [];
+    } catch(e) {
+        portfolios = [];
+    }
+    renderList();
+}
+
+function renderList() {
+    var tbody = document.getElementById('listBody');
+    if (portfolios.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;color:var(--text-light)">등록된 시공실적이 없습니다.</td></tr>';
+        return;
+    }
+    tbody.innerHTML = portfolios.map(function(p, i) {
+        var thumb = p.images && p.images.length > 0 ? '<img class="thumb" src="' + p.images[0] + '">' : '없음';
+        return '<tr>' +
+            '<td>' + thumb + '</td>' +
+            '<td><span class="cat-tag">' + (p.displayCategory || '') + '</span></td>' +
+            '<td>' + p.title + '</td>' +
+            '<td>' + (p.location || '') + '</td>' +
+            '<td class="actions">' +
+                '<button class="btn btn-edit" onclick="editItem(' + i + ')">수정</button>' +
+                '<button class="btn btn-danger" onclick="deleteItem(' + i + ')">삭제</button>' +
+            '</td></tr>';
+    }).join('');
+}
+
+// ========== 파일 미리보기 ==========
+document.getElementById('fFiles').addEventListener('change', function() {
+    newFiles = Array.from(this.files);
+    renderNewPreviews();
+});
+
+function renderNewPreviews() {
+    var area = document.getElementById('newPreviews');
+    area.innerHTML = '';
+    newFiles.forEach(function(file, i) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var div = document.createElement('div');
+            div.className = 'prev-item';
+            div.innerHTML = '<img src="' + e.target.result + '"><button class="remove-btn" onclick="removeNewFile(' + i + ')">×</button>';
+            area.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+function removeNewFile(idx) {
+    newFiles.splice(idx, 1);
+    renderNewPreviews();
+}
+
+// ========== 이미지 -> base64 (리사이즈) ==========
+function fileToBase64(file) {
+    return new Promise(function(resolve) {
+        var reader = new FileReader();
+        reader.onload = function() {
+            var img = new Image();
+            img.onload = function() {
+                var canvas = document.createElement('canvas');
+                var maxW = 1200;
+                var w = img.width, h = img.height;
+                if (w > maxW) { h = h * maxW / w; w = maxW; }
+                canvas.width = w;
+                canvas.height = h;
+                canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                var dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+                var base64 = dataUrl.split(',')[1];
+                resolve(base64);
+            };
+            img.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+// ========== 등록/수정 ==========
+async function submitForm() {
+    var title = document.getElementById('fTitle').value.trim();
+    var category = document.getElementById('fCategory').value;
+    if (!title || !category) { showStatus('제목과 카테고리는 필수입니다.', 'error'); return; }
+    if (!getConfig().token) { showStatus('GitHub 토큰을 먼저 설정해주세요.', 'error'); return; }
+
+    var editId = document.getElementById('editId').value;
+    var isEdit = editId !== '';
+    var id = isEdit ? editId : Date.now().toString(36) + Math.random().toString(36).substr(2, 4);
+
+    var item = {
+        id: id,
+        title: title,
+        category: category,
+        displayCategory: CAT_LABELS[category] || category,
+        scale: document.getElementById('fScale').value.trim(),
+        period: document.getElementById('fPeriod').value.trim(),
+        location: document.getElementById('fLocation').value.trim(),
+        client: document.getElementById('fClient').value.trim(),
+        desc: document.getElementById('fDesc').value.trim(),
+        images: []
+    };
+
+    // 기존 이미지 유지 (삭제된 것 제외)
+    if (isEdit) {
+        var existing = portfolios.find(function(p) { return p.id === editId; });
+        if (existing && existing.images) {
+            item.images = existing.images.filter(function(img) {
+                return removeImages.indexOf(img) === -1;
+            });
+        }
+    }
+
+    // 새 이미지 업로드
+    if (newFiles.length > 0) {
+        showStatus('이미지 업로드 중... (0/' + newFiles.length + ')', 'loading');
+        for (var i = 0; i < newFiles.length; i++) {
+            showStatus('이미지 업로드 중... (' + (i+1) + '/' + newFiles.length + ')', 'loading');
+            var base64 = await fileToBase64(newFiles[i]);
+            var ext = newFiles[i].name.split('.').pop().toLowerCase() || 'jpg';
+            var fileName = id + '-' + (item.images.length + 1) + '.' + ext;
+            var path = 'img/portfolio/' + fileName;
+            await ghPutBinary(path, base64, '이미지 업로드: ' + fileName);
+            item.images.push(path);
+        }
+    }
+
+    // 포트폴리오 데이터 업데이트
+    showStatus('데이터 저장 중...', 'loading');
+    if (isEdit) {
+        var idx = portfolios.findIndex(function(p) { return p.id === editId; });
+        if (idx !== -1) portfolios[idx] = item;
+    } else {
+        portfolios.push(item);
+    }
+
+    // JSON 커밋
+    var jsonContent = JSON.stringify({ portfolios: portfolios }, null, 2);
+    var jsonFile = await ghGet('data/portfolios.json');
+    var sha = jsonFile ? jsonFile.sha : null;
+    await ghPut('data/portfolios.json', jsonContent, (isEdit ? '수정' : '등록') + ': ' + title, sha);
+
+    showStatus((isEdit ? '수정' : '등록') + ' 완료!', 'success');
+    clearForm();
+    await loadData();
+}
+
+// ========== 수정 모드 ==========
+function editItem(idx) {
+    var p = portfolios[idx];
+    document.getElementById('editId').value = p.id;
+    document.getElementById('fTitle').value = p.title || '';
+    document.getElementById('fCategory').value = p.category || '';
+    document.getElementById('fScale').value = p.scale || '';
+    document.getElementById('fPeriod').value = p.period || '';
+    document.getElementById('fLocation').value = p.location || '';
+    document.getElementById('fClient').value = p.client || '';
+    document.getElementById('fDesc').value = p.desc || '';
+
+    // 기존 이미지 표시
+    removeImages = [];
+    var existArea = document.getElementById('existPreviews');
+    if (p.images && p.images.length > 0) {
+        document.getElementById('existingImages').style.display = 'block';
+        existArea.innerHTML = p.images.map(function(img, i) {
+            return '<div class="prev-item"><img src="' + img + '"><button class="remove-btn" onclick="markRemoveImage(\'' + img + '\', this)">×</button></div>';
+        }).join('');
+    } else {
+        document.getElementById('existingImages').style.display = 'none';
+    }
+
+    document.getElementById('formTitle').textContent = '시공실적 수정';
+    document.getElementById('submitBtn').textContent = '수정하기';
+    document.getElementById('cancelBtn').style.display = 'inline-block';
+    document.getElementById('formCard').scrollIntoView({ behavior:'smooth' });
+}
+
+function markRemoveImage(img, btn) {
+    removeImages.push(img);
+    btn.parentElement.style.opacity = '0.3';
+    btn.disabled = true;
+}
+
+function cancelEdit() { clearForm(); }
+
+function clearForm() {
+    document.getElementById('editId').value = '';
+    document.getElementById('fTitle').value = '';
+    document.getElementById('fCategory').value = '';
+    document.getElementById('fScale').value = '';
+    document.getElementById('fPeriod').value = '';
+    document.getElementById('fLocation').value = '';
+    document.getElementById('fClient').value = '';
+    document.getElementById('fDesc').value = '';
+    document.getElementById('fFiles').value = '';
+    document.getElementById('newPreviews').innerHTML = '';
+    document.getElementById('existPreviews').innerHTML = '';
+    document.getElementById('existingImages').style.display = 'none';
+    document.getElementById('formTitle').textContent = '시공실적 등록';
+    document.getElementById('submitBtn').textContent = '등록하기';
+    document.getElementById('cancelBtn').style.display = 'none';
+    newFiles = [];
+    removeImages = [];
+}
+
+// ========== 삭제 ==========
+async function deleteItem(idx) {
+    if (!confirm('정말 삭제하시겠습니까?')) return;
+    if (!getConfig().token) { showStatus('GitHub 토큰을 먼저 설정해주세요.', 'error'); return; }
+
+    var p = portfolios[idx];
+    showStatus('삭제 중...', 'loading');
+
+    // 이미지 파일 삭제
+    if (p.images) {
+        for (var i = 0; i < p.images.length; i++) {
+            var imgFile = await ghGet(p.images[i]);
+            if (imgFile && imgFile.sha) {
+                await ghDelete(p.images[i], imgFile.sha, '이미지 삭제: ' + p.images[i]);
+            }
+        }
+    }
+
+    // 데이터에서 제거
+    portfolios.splice(idx, 1);
+    var jsonContent = JSON.stringify({ portfolios: portfolios }, null, 2);
+    var jsonFile = await ghGet('data/portfolios.json');
+    await ghPut('data/portfolios.json', jsonContent, '삭제: ' + p.title, jsonFile ? jsonFile.sha : null);
+
+    showStatus('삭제 완료!', 'success');
+    await loadData();
+}
+
+// ========== 초기화 ==========
+function init() {
+    checkToken();
+    loadData();
+}
+
+// 페이지 로드 시
+if (localStorage.getItem('admin_auth') === '1') {
+    document.getElementById('loginGate').classList.add('hidden');
+    init();
+}
+</script>
+</body>
+</html>

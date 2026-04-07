@@ -680,6 +680,7 @@ async function deleteItem(idx) {
     await ghPut('data/portfolios.json', jsonContent, '삭제: ' + p.title, jsonFile ? jsonFile.sha : null);
 
     showStatus('삭제 완료!', 'success');
+    clearForm();
     renderList();
 }
 

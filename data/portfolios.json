@@ -1,20 +1,3 @@
 {
-  "portfolios": [
-    {
-      "id": "mnoodfc3anbn",
-      "title": "이혁재 공사",
-      "category": "building",
-      "displayCategory": "건축공사",
-      "scale": "지상6층 1200평",
-      "period": "2024.03~2024.05",
-      "location": "경기도 남양주",
-      "client": "이혁재",
-      "desc": "이혁재바보",
-      "thumbnail": null,
-      "images": [
-        "img/portfolio/mnoodfc3anbn-1.jpg",
-        "img/portfolio/mnoodfc3anbn-2.jpg"
-      ]
-    }
-  ]
+  "portfolios": []
 }

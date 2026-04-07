@@ -430,7 +430,18 @@ async function loadData() {
 
 function imgUrl(path) {
     var c = getConfig();
-    return 'https://raw.githubusercontent.com/' + c.owner + '/' + c.repo + '/main/' + path + '?v=' + Date.now();
+    return 'https://api.github.com/repos/' + c.owner + '/' + c.repo + '/contents/' + path + '?ref=main';
+}
+
+async function loadImgSrc(imgEl, path) {
+    var c = getConfig();
+    try {
+        var res = await fetch('https://api.github.com/repos/' + c.owner + '/' + c.repo + '/contents/' + path, {
+            headers: { 'Authorization': 'Bearer ' + c.token, 'Accept': 'application/vnd.github.v3+json' }
+        });
+        var data = await res.json();
+        if (data.download_url) imgEl.src = data.download_url + '?v=' + Date.now();
+    } catch(e) {}
 }
 
 function renderList() {
@@ -441,7 +452,7 @@ function renderList() {
     }
     tbody.innerHTML = portfolios.map(function(p, i) {
         var thumbSrc = p.thumbnail || (p.images && p.images.length > 0 ? p.images[0] : null);
-        var thumb = thumbSrc ? '<img class="thumb" src="' + imgUrl(thumbSrc) + '">' : '없음';
+        var thumb = thumbSrc ? '<img class="thumb" data-path="' + thumbSrc + '" src="">' : '없음';
         return '<tr>' +
             '<td>' + thumb + '</td>' +
             '<td><span class="cat-tag">' + (p.displayCategory || '') + '</span></td>' +
@@ -452,6 +463,11 @@ function renderList() {
                 '<button class="btn btn-danger" onclick="deleteItem(' + i + ')">삭제</button>' +
             '</td></tr>';
     }).join('');
+
+    // 이미지 즉시 로드
+    document.querySelectorAll('.list-table img[data-path]').forEach(function(img) {
+        loadImgSrc(img, img.dataset.path);
+    });
 }
 
 // ========== 파일 미리보기 ==========
@@ -595,8 +611,11 @@ function editItem(idx) {
         var thumbIdx = p.thumbnail ? p.images.indexOf(p.thumbnail) : 0;
         existArea.innerHTML = p.images.map(function(img, i) {
             var isThumb = (i === thumbIdx) ? ' is-thumb' : '';
-            return '<div class="prev-item' + isThumb + '" ondblclick="setThumbnail(\'' + img + '\')" title="더블클릭: 대표사진 설정"><img src="' + imgUrl(img) + '"><button class="remove-btn" onclick="event.stopPropagation();markRemoveImage(\'' + img + '\', this)">×</button></div>';
+            return '<div class="prev-item' + isThumb + '" ondblclick="setThumbnail(\'' + img + '\')" title="더블클릭: 대표사진 설정"><img data-path="' + img + '" src=""><button class="remove-btn" onclick="event.stopPropagation();markRemoveImage(\'' + img + '\', this)">×</button></div>';
         }).join('');
+        document.querySelectorAll('#existPreviews img[data-path]').forEach(function(img) {
+            loadImgSrc(img, img.dataset.path);
+        });
     } else {
         document.getElementById('existingImages').style.display = 'none';
     }

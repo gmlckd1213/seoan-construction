@@ -407,13 +407,20 @@ var removeImages = [];
 
 async function loadData() {
     try {
-        var res = await fetch('data/portfolios.json?v=' + Date.now());
+        var c = getConfig();
+        var rawUrl = 'https://raw.githubusercontent.com/' + c.owner + '/' + c.repo + '/main/data/portfolios.json?v=' + Date.now();
+        var res = await fetch(rawUrl);
         var data = await res.json();
         portfolios = data.portfolios || [];
     } catch(e) {
         portfolios = [];
     }
     renderList();
+}
+
+function imgUrl(path) {
+    var c = getConfig();
+    return 'https://raw.githubusercontent.com/' + c.owner + '/' + c.repo + '/main/' + path + '?v=' + Date.now();
 }
 
 function renderList() {
@@ -423,7 +430,7 @@ function renderList() {
         return;
     }
     tbody.innerHTML = portfolios.map(function(p, i) {
-        var thumb = p.images && p.images.length > 0 ? '<img class="thumb" src="' + p.images[0] + '">' : '없음';
+        var thumb = p.images && p.images.length > 0 ? '<img class="thumb" src="' + imgUrl(p.images[0]) + '">' : '없음';
         return '<tr>' +
             '<td>' + thumb + '</td>' +
             '<td><span class="cat-tag">' + (p.displayCategory || '') + '</span></td>' +
@@ -572,7 +579,7 @@ function editItem(idx) {
     if (p.images && p.images.length > 0) {
         document.getElementById('existingImages').style.display = 'block';
         existArea.innerHTML = p.images.map(function(img, i) {
-            return '<div class="prev-item"><img src="' + img + '"><button class="remove-btn" onclick="markRemoveImage(\'' + img + '\', this)">×</button></div>';
+            return '<div class="prev-item"><img src="' + imgUrl(img) + '"><button class="remove-btn" onclick="markRemoveImage(\'' + img + '\', this)">×</button></div>';
         }).join('');
     } else {
         document.getElementById('existingImages').style.display = 'none';

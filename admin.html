@@ -89,6 +89,13 @@ body { font-family:'Noto Sans KR',sans-serif; background:var(--bg); color:var(--
     background:var(--danger); color:#fff; border:none; border-radius:50%;
     font-size:0.65rem; cursor:pointer; display:flex; align-items:center; justify-content:center;
 }
+.previews .prev-item.is-thumb { outline:3px solid var(--accent); border-radius:6px; }
+.previews .prev-item.is-thumb::after {
+    content:'대표'; position:absolute; bottom:2px; left:2px;
+    background:var(--accent); color:#fff; font-size:0.55rem; padding:1px 5px;
+    border-radius:3px; font-weight:500;
+}
+.previews .prev-item { cursor:pointer; user-select:none; }
 
 /* 버튼 */
 .btn {
@@ -430,7 +437,8 @@ function renderList() {
         return;
     }
     tbody.innerHTML = portfolios.map(function(p, i) {
-        var thumb = p.images && p.images.length > 0 ? '<img class="thumb" src="' + imgUrl(p.images[0]) + '">' : '없음';
+        var thumbSrc = p.thumbnail || (p.images && p.images.length > 0 ? p.images[0] : null);
+        var thumb = thumbSrc ? '<img class="thumb" src="' + imgUrl(thumbSrc) + '">' : '없음';
         return '<tr>' +
             '<td>' + thumb + '</td>' +
             '<td><span class="cat-tag">' + (p.displayCategory || '') + '</span></td>' +
@@ -514,6 +522,7 @@ async function submitForm() {
         location: document.getElementById('fLocation').value.trim(),
         client: document.getElementById('fClient').value.trim(),
         desc: document.getElementById('fDesc').value.trim(),
+        thumbnail: null,
         images: []
     };
 
@@ -524,6 +533,7 @@ async function submitForm() {
             item.images = existing.images.filter(function(img) {
                 return removeImages.indexOf(img) === -1;
             });
+            item.thumbnail = selectedThumbnail || existing.thumbnail || null;
         }
     }
 
@@ -575,11 +585,14 @@ function editItem(idx) {
 
     // 기존 이미지 표시
     removeImages = [];
+    selectedThumbnail = p.thumbnail || null;
     var existArea = document.getElementById('existPreviews');
     if (p.images && p.images.length > 0) {
         document.getElementById('existingImages').style.display = 'block';
+        var thumbIdx = p.thumbnail ? p.images.indexOf(p.thumbnail) : 0;
         existArea.innerHTML = p.images.map(function(img, i) {
-            return '<div class="prev-item"><img src="' + imgUrl(img) + '"><button class="remove-btn" onclick="markRemoveImage(\'' + img + '\', this)">×</button></div>';
+            var isThumb = (i === thumbIdx) ? ' is-thumb' : '';
+            return '<div class="prev-item' + isThumb + '" ondblclick="setThumbnail(\'' + img + '\')" title="더블클릭: 대표사진 설정"><img src="' + imgUrl(img) + '"><button class="remove-btn" onclick="event.stopPropagation();markRemoveImage(\'' + img + '\', this)">×</button></div>';
         }).join('');
     } else {
         document.getElementById('existingImages').style.display = 'none';
@@ -589,6 +602,28 @@ function editItem(idx) {
     document.getElementById('submitBtn').textContent = '수정하기';
     document.getElementById('cancelBtn').style.display = 'inline-block';
     document.getElementById('formCard').scrollIntoView({ behavior:'smooth' });
+}
+
+var selectedThumbnail = null;
+
+function setThumbnail(img) {
+    var items = document.querySelectorAll('#existPreviews .prev-item');
+    if (selectedThumbnail === img) {
+        selectedThumbnail = null;
+        items.forEach(function(el) { el.classList.remove('is-thumb'); });
+        items[0].classList.add('is-thumb');
+        showStatus('대표사진이 해제되었습니다. (첫 번째 사진이 기본)', 'success');
+    } else {
+        selectedThumbnail = img;
+        items.forEach(function(el) { el.classList.remove('is-thumb'); });
+        var editId = document.getElementById('editId').value;
+        var p = portfolios.find(function(x) { return x.id === editId; });
+        if (p && p.images) {
+            var idx = p.images.indexOf(img);
+            if (idx >= 0) items[idx].classList.add('is-thumb');
+        }
+        showStatus('대표사진이 설정되었습니다.', 'success');
+    }
 }
 
 function markRemoveImage(img, btn) {
@@ -617,6 +652,7 @@ function clearForm() {
     document.getElementById('cancelBtn').style.display = 'none';
     newFiles = [];
     removeImages = [];
+    selectedThumbnail = null;
 }
 
 // ========== 삭제 ==========

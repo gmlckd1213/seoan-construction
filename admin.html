@@ -568,7 +568,7 @@ async function submitForm() {
 
     showStatus((isEdit ? '수정' : '등록') + ' 완료!', 'success');
     clearForm();
-    await loadData();
+    renderList();
 }
 
 // ========== 수정 모드 ==========
@@ -599,7 +599,7 @@ function editItem(idx) {
     }
 
     document.getElementById('formTitle').textContent = '시공실적 수정';
-    document.getElementById('submitBtn').textContent = '수정하기';
+    document.getElementById('submitBtn').textContent = '완료';
     document.getElementById('cancelBtn').style.display = 'inline-block';
     document.getElementById('formCard').scrollIntoView({ behavior:'smooth' });
 }
@@ -680,7 +680,7 @@ async function deleteItem(idx) {
     await ghPut('data/portfolios.json', jsonContent, '삭제: ' + p.title, jsonFile ? jsonFile.sha : null);
 
     showStatus('삭제 완료!', 'success');
-    await loadData();
+    renderList();
 }
 
 // ========== 초기화 ==========

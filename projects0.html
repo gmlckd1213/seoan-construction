@@ -1031,10 +1031,9 @@ a {
 }
 
 .ceo-content {
-    display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: 80px;
-    align-items: start;
+    max-width: 720px;
+    margin: 0 auto;
+    text-align: center;
 }
 
 .ceo-photo-area {
@@ -1110,7 +1109,7 @@ a {
     margin-top: 40px;
     padding-top: 24px;
     border-top: 1px solid var(--border);
-    text-align: right;
+    text-align: center;
 }
 
 .ceo-signature span {
@@ -1660,12 +1659,6 @@ a {
             <h2 class="section-title">대표이사 인사말</h2>
         </div>
         <div class="ceo-content" data-aos="fade-up">
-            <div class="ceo-photo-area">
-                <div class="ceo-photo" style="background: url('img/ceo.jpg') center/cover;">
-                </div>
-                <h3 class="ceo-name">이 혁 재</h3>
-                <p class="ceo-title">대표이사</p>
-            </div>
             <div class="ceo-message">
                 <blockquote>
                     <p>
@@ -1758,24 +1751,24 @@ a {
                 <h3 class="form-title">시공 상담 문의</h3>
                 <div class="form-row">
                     <div class="form-group">
-                        <input type="text" placeholder="성함" required>
+                        <input type="text" name="성함" placeholder="성함" required>
                     </div>
                     <div class="form-group">
-                        <input type="tel" placeholder="연락처" required>
+                        <input type="tel" name="연락처" placeholder="연락처" required>
                     </div>
                 </div>
                 <div class="form-group">
-                    <select required>
+                    <select name="공사유형" required>
                         <option value="" disabled selected>공사 유형 선택</option>
-                        <option value="building">건축공사</option>
-                        <option value="civil">토목공사</option>
-                        <option value="interior">인테리어</option>
-                        <option value="remodel">리모델링</option>
-                        <option value="other">기타</option>
+                        <option value="건축공사">건축공사</option>
+                        <option value="토목공사">토목공사</option>
+                        <option value="인테리어">인테리어</option>
+                        <option value="리모델링">리모델링</option>
+                        <option value="기타">기타</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <textarea placeholder="공사 내용을 간략히 알려주세요 (위치, 규모, 예산 등)" rows="5" required></textarea>
+                    <textarea name="상담내용" placeholder="공사 내용을 간략히 알려주세요 (위치, 규모, 예산 등)" rows="5" required></textarea>
                 </div>
                 <button type="submit" class="btn-primary">상담 신청하기</button>
             </form>
@@ -2229,20 +2222,56 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Contact form
+    // Contact form - Formsubmit으로 이메일 전송
     var contactForm = document.getElementById('contactForm');
     if (contactForm) {
-        contactForm.addEventListener('submit', function (e) {
+        contactForm.addEventListener('submit', async function (e) {
             e.preventDefault();
             var btn = contactForm.querySelector('.btn-primary');
             var originalText = btn.textContent;
-            btn.textContent = 'Message Sent!';
-            btn.style.background = '#43e97b';
+            btn.textContent = '전송 중...';
+            btn.disabled = true;
+
+            var formData = new FormData(contactForm);
+            formData.append('_subject', '[서안종합건설] 시공 상담 문의');
+            formData.append('_template', 'table');
+            formData.append('_captcha', 'false');
+
+            try {
+                var res = await fetch('https://formsubmit.co/ajax/gmlckd1213@nate.com', {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json' },
+                    body: formData
+                });
+                var data = await res.json();
+                console.log('Formsubmit 응답:', data);
+
+                if (data.success === 'true' || data.success === true) {
+                    btn.textContent = '전송 완료!';
+                    btn.style.background = '#43e97b';
+                    contactForm.reset();
+                } else if (data.message && data.message.indexOf('confirm') !== -1) {
+                    // 첫 사용 시 인증 안내
+                    alert('첫 사용 시 인증이 필요합니다.\ngmlckd1213@nate.com 메일함을 확인해서 인증 링크를 클릭해주세요.');
+                    btn.textContent = '인증 메일 확인 필요';
+                    btn.style.background = '#e65100';
+                } else {
+                    alert('전송 실패: ' + (data.message || '알 수 없는 오류'));
+                    btn.textContent = '전송 실패';
+                    btn.style.background = '#c0392b';
+                }
+            } catch (err) {
+                console.error('전송 오류:', err);
+                alert('전송 오류: ' + err.message);
+                btn.textContent = '전송 실패';
+                btn.style.background = '#c0392b';
+            }
+
             setTimeout(function () {
                 btn.textContent = originalText;
                 btn.style.background = '';
-                contactForm.reset();
-            }, 3000);
+                btn.disabled = false;
+            }, 4000);
         });
     }
 

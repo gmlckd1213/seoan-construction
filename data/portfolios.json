@@ -16,6 +16,23 @@
         "img/portfolio/mnooraoyheza-2.jpg",
         "img/portfolio/mnooraoyheza-4.jpg"
       ]
+    },
+    {
+      "id": "mp42c2kr85gl",
+      "title": "인테리어",
+      "category": "building",
+      "displayCategory": "건축공사",
+      "scale": "지상 1층",
+      "period": "2024.05 ~ 2024.12",
+      "location": "경기도 남양주시",
+      "client": "민간 발주",
+      "desc": "프로젝트설명 \n메롱\n메로롱롤ㅇ",
+      "thumbnail": "img/portfolio/mp42c2kr85gl-1.jpg",
+      "images": [
+        "img/portfolio/mp42c2kr85gl-1.jpg",
+        "img/portfolio/mp42c2kr85gl-2.jpg",
+        "img/portfolio/mp42c2kr85gl-3.jpg"
+      ]
     }
   ]
 }

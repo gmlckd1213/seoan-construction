@@ -1,0 +1,4 @@
+exclude:
+  - _archive
+  - backend
+  - README.md

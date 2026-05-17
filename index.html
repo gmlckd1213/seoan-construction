@@ -1964,13 +1964,18 @@ document.addEventListener('DOMContentLoaded', function () {
     function renderPortfolio() {
         var slider = document.getElementById('portfolioSlider');
         slider.innerHTML = '';
+        // 카테고리 매핑: 기존 civil/remodel은 building(건축토목공사)로 통합
+        var CAT_MAP = { building:'building', civil:'building', remodel:'building', interior:'interior', '3d':'3d' };
+        var CAT_LABELS = { building:'건축토목공사', interior:'인테리어공사', '3d':'3D모델링' };
         portfolioData.forEach(function(p) {
             var thumbSrc = p.thumbnail || (p.images && p.images.length > 0 ? p.images[0] : '');
             var imgSrc = ghImgUrl(thumbSrc);
             var imagesStr = (p.images || []).map(function(img) { return ghImgUrl(img); }).join(',');
+            var mappedCat = CAT_MAP[p.category] || p.category;
+            var label = CAT_LABELS[mappedCat] || p.displayCategory || '';
             var div = document.createElement('div');
             div.className = 'portfolio-item';
-            div.setAttribute('data-category', p.category || '');
+            div.setAttribute('data-category', mappedCat);
             div.setAttribute('data-scale', p.scale || '');
             div.setAttribute('data-period', p.period || '');
             div.setAttribute('data-location', p.location || '');
@@ -1980,7 +1985,7 @@ document.addEventListener('DOMContentLoaded', function () {
             div.setAttribute('data-images', imagesStr);
             div.innerHTML = '<img class="portfolio-img" src="' + imgSrc + '" alt="' + (p.title || '') + '">' +
                 '<div class="portfolio-overlay">' +
-                    '<span class="portfolio-category">' + (p.displayCategory || '') + '</span>' +
+                    '<span class="portfolio-category">' + label + '</span>' +
                     '<h3>' + (p.title || '') + '</h3>' +
                     '<p>' + (p.scale || '') + '</p>' +
                 '</div>';

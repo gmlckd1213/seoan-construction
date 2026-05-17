@@ -267,10 +267,9 @@ body { font-family:'Noto Sans KR',sans-serif; background:var(--bg); color:var(--
                     <label>카테고리 *</label>
                     <select id="fCategory">
                         <option value="">선택</option>
-                        <option value="building">건물</option>
-                        <option value="civil">토목</option>
-                        <option value="interior">인테리어</option>
-                        <option value="remodel">리모델링</option>
+                        <option value="building">건축토목공사</option>
+                        <option value="interior">인테리어공사</option>
+                        <option value="3d">3D모델링</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -343,7 +342,7 @@ body { font-family:'Noto Sans KR',sans-serif; background:var(--bg); color:var(--
 <script>
 // ========== 설정 ==========
 var ADMIN_PW_HASH = '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'; // "password"
-var CAT_LABELS = { building:'건축공사', civil:'토목공사', interior:'인테리어', remodel:'리모델링' };
+var CAT_LABELS = { building:'건축토목공사', interior:'인테리어공사', '3d':'3D모델링', civil:'토목공사', remodel:'리모델링' };
 
 function getConfig() {
     return {
